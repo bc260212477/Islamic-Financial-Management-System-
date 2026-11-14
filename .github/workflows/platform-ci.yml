@@ -1,0 +1,49 @@
+name: Platform CI (Phase 2+)
+
+on:
+  push:
+    paths: ['apps/platform/**', '.github/workflows/platform-ci.yml']
+  pull_request:
+    paths: ['apps/platform/**', '.github/workflows/platform-ci.yml']
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_DB: barakah_test
+          POSTGRES_USER: barakah
+          POSTGRES_PASSWORD: secret
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd "pg_isready -U barakah" --health-interval 5s
+          --health-timeout 3s --health-retries 10
+    defaults:
+      run:
+        working-directory: apps/platform
+    env:
+      DB_CONNECTION: pgsql
+      DB_HOST: 127.0.0.1
+      DB_PORT: 5432
+      DB_DATABASE: barakah_test
+      DB_USERNAME: barakah
+      DB_PASSWORD: secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_pgsql, pgsql, bcmath, intl, mbstring, xml, curl, zip
+          tools: composer:v2
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: composer install --no-interaction --prefer-dist
+      - run: npm ci && npm run build
+      - run: cp .env.example .env && php artisan key:generate
+      - name: Migrations run on PostgreSQL
+        run: php artisan migrate:fresh --seed --force
+      - name: PHPUnit (PostgreSQL)
+        run: php artisan test
