@@ -6,9 +6,6 @@ name: Screenshots (docs)
 
 on:
   workflow_dispatch:
-  push:
-    branches: ['arena/25358bad-islamic-financial-management-s']
-    paths: ['.github/workflows/screenshots.yml', 'tools/screenshots/**']
 
 permissions:
   contents: write
@@ -17,13 +14,13 @@ jobs:
   capture:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: pdo_sqlite, sqlite3, bcmath, intl, mbstring, xml, curl, zip
           tools: composer:v2
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with: { node-version: '20' }
 
       - name: Boot Laravel platform (SQLite, seeded demo)

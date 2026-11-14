@@ -8,9 +8,6 @@ name: Scaffold Platform (Phase 2, one-time generator)
 
 on:
   workflow_dispatch:
-  push:
-    branches: ['arena/e96af9f7-islamic-financial-management-s']
-    paths: ['.github/workflows/scaffold-platform.yml']
 
 permissions:
   contents: write
@@ -20,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Skip if already scaffolded
         id: check
@@ -37,7 +34,7 @@ jobs:
 
       - name: Setup Node 20
         if: steps.check.outputs.exists == 'false'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: '20'
 
