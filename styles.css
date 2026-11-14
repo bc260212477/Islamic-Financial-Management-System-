@@ -49,6 +49,17 @@ h2 { font-size: 28px; margin: 0; font-weight: 600; }
 .stat-note.positive { color: var(--green); }
 .stat-note.negative { color: var(--red); }
 .content-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; margin-top: 18px; }
+.charts-grid { display: grid; grid-template-columns: 1.1fr 1fr; gap: 18px; margin-top: 18px; }
+.chart-svg, .donut-svg { width: 100%; height: auto; display: block; }
+.chart-axis { fill: var(--ink-muted); font: 500 11px 'Inter', sans-serif; }
+.chart-value { fill: var(--ink-soft); font: 600 11px 'Inter', sans-serif; }
+.donut-wrap { display: flex; align-items: center; gap: 22px; }
+.donut-svg { max-width: 190px; flex: 0 0 auto; }
+.donut-total { fill: var(--ink); font: 700 25px 'Cormorant Garamond', Georgia, serif; }
+.legend { list-style: none; margin: 0; padding: 0; flex: 1; min-width: 150px; }
+.legend li { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 9px 0; border-bottom: 1px solid rgba(140,134,118,.14); font-size: 13px; }
+.legend li:last-child { border-bottom: 0; }
+.legend-pct { color: var(--ink-muted); font-weight: 500; font-size: 11px; }
 .panel { padding: 24px; }
 .panel-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 18px; }
 .panel-heading p { color: var(--ink-muted); font-size: 12px; margin: 5px 0 0; }
@@ -81,5 +92,6 @@ h2 { font-size: 28px; margin: 0; font-weight: 600; }
 .modal-backdrop { animation: fade-in .18s ease; }
 @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
-@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
+@media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .content-grid, .charts-grid { grid-template-columns: 1fr; } }
+@media (max-width: 520px) { .donut-wrap { flex-direction: column; align-items: stretch; } .donut-svg { margin: 0 auto; } }
 @media (max-width: 640px) { .app-shell { padding: 28px 14px 40px; } .topbar { align-items: flex-start; flex-direction: column; margin-bottom: 22px; } .actions { width: 100%; } .actions .btn { flex: 1; } .stats-grid { grid-template-columns: 1fr; gap: 12px; } .stat-card { min-height: 140px; } .panel { padding: 19px; } h1 { font-size: 48px; } }

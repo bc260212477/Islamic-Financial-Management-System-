@@ -1,0 +1,4 @@
+# SKILL: Security Review
+**Use when:** any PR touching auth, money mutation, uploads, AI, or dependencies. Result pasted into the PR.
+Checklist: □ Passwords argon2id; tokens short-lived, refresh httpOnly/Secure/SameSite, revoked on logout. □ Every query user_id-scoped from token; IDOR test present. □ Amounts validated >0, bounded; idempotency on POST money. □ CSV: size/row caps, formula-neutralised export, batch rollback. □ No secrets in repo/logs/client; env-only config. □ LLM receives minimum retrieved rows; no cross-user context; verifier on. □ audit_log written for mutations/imports/exports/deletes. □ Dependencies: lockfile, audit clean or DECISIONS exception, license noted (incl. any GitHub-Repos- catalogue candidate). □ Error responses leak no stack/SQL. □ TLS/host headers via platform verified.
+Done when: all boxes checked or an explicit risk acceptance is added to DECISIONS.md.
