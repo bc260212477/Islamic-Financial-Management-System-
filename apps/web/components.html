@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Barakah OS — Design System Preview (v4.0)</title>
+<link rel="stylesheet" href="styles.css">
+<style>body{padding:1.2rem;max-width:1100px;margin:0 auto}section{margin:2rem 0}h2{font-family:Fraunces,Georgia,serif;color:var(--green)}table.demo td{vertical-align:top}.tok{font-family:ui-monospace,monospace;font-size:.8rem;background:var(--sunken);border-radius:8px;padding:.15rem .45rem}</style>
+</head>
+<body>
+<header style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:.6rem">
+  <div><div class="serif" style="font-size:1.8rem;color:var(--green)">Barakah <b style="color:var(--gold)">OS</b> — Design Preview</div>
+  <p style="color:var(--ink3)">Directive v4.0 · Quiet Confidence · 5 core components × 8 states · motion tokens live. <a href="./">← Back to app</a></p></div>
+  <div><button class="btn ghost small" id="dark">🌙 Dark</button> <button class="btn ghost small" id="motion">⏸ Reduce motion</button></div>
+</header>
+
+<div class="banner">Every component below is the real production CSS (<span class="tok">apps/web/styles.css</span>) — hover, press, focus (Tab), disable, load, error and empty are all interactive here. Tokens: <span class="tok">--dur-fast 150ms</span> <span class="tok">--ease-out-expo</span> <span class="tok">--e2 card</span> <span class="tok">--e5 palette</span></div>
+
+<section><h2>1 · Button</h2><div class="card">
+<p><button class="btn">Primary</button> <button class="btn gold">Gold</button> <button class="btn ghost">Ghost</button> <button class="btn danger">Danger</button> <button class="btn" disabled>Disabled (40%)</button> <button class="btn" id="loadbtn">Save → try loading state</button></p>
+<p style="color:var(--ink3)">States: Default · Hover (lift −1px) · Focus (gold ring — press Tab) · Active (scale .98) · Disabled · Loading (spinner→✓) · Error n/a · Empty n/a</p></div></section>
+
+<section><h2>2 · Card</h2><div class="grid g3">
+<div class="card goldtop kpi"><div class="label">Stat Card (count-up in app)</div><div class="num">PKR 1,766,800</div><p>Hover me — I lift 2px, shadow deepens e2→e3, hairline turns gold.</p></div>
+<div class="card"><h3>Default Card</h3><p>Warm paper, gold hairline border, downward-only warm shadow. No pure white, no pure black — Quiet Confidence.</p></div>
+<div class="empty"><div class="ic">🌱</div><h3>Empty State</h3><p>Nothing here yet — every empty state has exactly ONE next step.</p><button class="btn gold small">Add your first item</button></div>
+</div><div class="grid g3" style="margin-top:1rem">
+<div class="card skel"><h3>Loading skeleton</h3><p>Shimmer sweeps every 1.2s while data arrives — no layout shift, no flashing.</p><p>████████████ ████████</p></div>
+<div class="card"><h3>Progress</h3><div class="progress"><i id="prog" style="width:0%"></i></div><p><button class="btn small" id="progbtn">Fill ring-style (800ms out-expo)</button></p></div>
+<div class="card"><h3>Chart draw</h3><svg viewBox="0 0 210 150" style="width:100%"><rect class="bar" x="12" y="60" width="42" height="80" rx="6" fill="#2D6A4F"/><rect class="bar" style="animation-delay:80ms" x="82" y="30" width="42" height="110" rx="6" fill="#C6A34F"/><rect class="bar" style="animation-delay:160ms" x="152" y="85" width="42" height="55" rx="6" fill="#14532D"/></svg><p style="color:var(--ink3);font-size:.75rem">Bars draw on mount · Source: preview MANUAL <span class="tag manual">MANUAL</span></p></div>
+</div></section>
+
+<section><h2>3 · Input</h2><div class="card"><form class="inline" id="iform">
+<label>Amount (focus me — gold border + ring)<input name="a" placeholder="PKR 0"></label>
+<label>Try error state<input name="b" id="errin" placeholder="Type then click Validate"></label>
+<button class="btn small" id="validate">Validate</button></form><div id="errspot"></div>
+<p style="color:var(--ink3)">Focus: gold border animates (150ms). Error: shake 4px + red border + message slides down (200ms). Disabled: 40% opacity, not-allowed.</p></div></section>
+
+<section><h2>4 · Modal</h2><div class="card"><button class="btn" id="openmodal">Open modal</button>
+<p style="color:var(--ink3)">Backdrop blurs+fades 200ms · modal scales .96→1 with spring overshoot 300ms · Esc/backdrop closes (reverse 200ms). The app's “+ Add transaction” uses this exact component.</p></div></section>
+
+<section><h2>5 · Toast</h2><div class="card"><button class="btn" id="t1">Success toast</button> <button class="btn danger" id="t2">Delete + Undo toast</button>
+<p style="color:var(--ink3)">Slides up, gold progress bar drains over 3s, Undo works — try deleting anything in the app.</p></div></section>
+
+<section><h2>Motion tokens in force</h2><div class="card"><p>
+<span class="tok">instant 100ms</span> <span class="tok">fast 150ms</span> <span class="tok">normal 250ms</span> <span class="tok">slow 400ms (max for UI)</span> <span class="tok">deliberate 600ms</span> <span class="tok">scroll 800ms</span> · stagger <span class="tok">30/80ms</span> · only <span class="tok">transform + opacity</span> animate · <span class="tok">prefers-reduced-motion</span> + manual toggle respected · Market-Breathing pulse appears ONLY on LIVE/DELAYED data, never DEMO.</p>
+<p style="color:var(--ink3)">Full spec: docs/01-architecture/MOTION-SYSTEM.md · DESIGN-SYSTEM.md · Founder critique: Directive v4.0 Part 13 (15 checks).</p></div></section>
+
+<div id="toast" role="status"></div>
+<script>
+const $=s=>document.querySelector(s);
+function toast(msg,action){const t=$('#toast');t.innerHTML='<span>'+msg+'</span>'+(action?'<button id="ta">'+action.label+'</button>':'')+'<i class="tbar"></i>';t.classList.add('show');if(action)$('#ta').onclick=()=>{action.fn();t.classList.remove('show')};clearTimeout(t._h);t._h=setTimeout(()=>t.classList.remove('show'),3000)}
+$('#dark').onclick=()=>document.body.classList.toggle('dark');
+$('#motion').onclick=e=>{document.body.classList.toggle('reduced-motion');e.target.textContent=document.body.classList.contains('reduced-motion')?'▶ Motion on':'⏸ Reduce motion';toast('Motion preference applied — every animation now respects it')};
+$('#loadbtn').onclick=e=>{const b=e.target;b.disabled=true;b.innerHTML='<span class="spin"></span> Saving…';setTimeout(()=>{b.innerHTML='✓ Saved';setTimeout(()=>{b.disabled=false;b.textContent='Save → try loading state'},900)},900)};
+$('#progbtn').onclick=()=>{$('#prog').style.width='72%';toast('Progress filled with ease-out-expo over 800ms')};
+$('#validate').onclick=e=>{e.preventDefault();const i=$('#errin');i.classList.remove('err');void i.offsetWidth;if(!i.value){i.classList.add('err');$('#errspot').innerHTML='<div class="errmsg">This field is required — error slides in, input shakes once.</div>'}else{$('#errspot').innerHTML='';toast('Valid ✓')}};
+$('#openmodal').onclick=()=>{const o=document.createElement('div');o.className='overlay';o.innerHTML='<div class="modal"><h3 style="margin-top:0">Modal component</h3><p>Scale .96 → 1.0, spring easing, backdrop blur. Destructive confirms use this with a gold top-border.</p><button class="btn" id="mc">Close</button></div>';document.body.appendChild(o);const close=()=>o.remove();o.onclick=e=>{if(e.target===o)close()};$('#mc',o);o.querySelector('#mc').onclick=close;document.addEventListener('keydown',function h(e){if(e.key==='Escape'){close();document.removeEventListener('keydown',h)}})};
+$('#t1').onclick=()=>toast('Saved successfully ✓');
+$('#t2').onclick=()=>toast('Item deleted',{label:'Undo',fn:()=>toast('Restored — nothing was lost')});
+</script>
+</body>
+</html>

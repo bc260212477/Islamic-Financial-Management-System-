@@ -10,7 +10,7 @@ const id = () => Math.random().toString(36).slice(2, 9);
 const today = () => new Date().toISOString().slice(0, 10);
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const tag = m => `<span class="tag ${m.toLowerCase()}">${m}</span>`;
-function toast(msg) { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2400); }
+function toast(msg, action) { const t = $('#toast'); t.innerHTML = '<span>' + esc(msg) + '</span>' + (action ? '<button id="toast-act">' + esc(action.label) + '</button>' : '') + '<i class="tbar"></i>'; t.classList.add('show'); if (action) $('#toast-act').onclick = () => { action.fn(); t.classList.remove('show'); }; clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 3000); }
 
 /* ---------- auth (demo-grade; production auth is Laravel Breeze) ---------- */
 let session = JSON.parse(localStorage.getItem('barakah:session') || 'null');
@@ -89,8 +89,10 @@ function derived() {
 /* ---------- charts (inline SVG, labelled with as-of) ---------- */
 function barChart(items) {
   const max = Math.max(...items.map(i => i.v), 1);
-  return `<svg viewBox="0 0 ${items.length * 70} 150" style="width:100%">${items.map((i, ix) => `<rect x="${ix * 70 + 12}" y="${140 - i.v / max * 120}" width="42" height="${i.v / max * 120}" rx="6" fill="${i.c || '#1B7A43'}"/><text x="${ix * 70 + 33}" y="150" font-size="9" text-anchor="middle" fill="#6B7268">${i.l}</text>`).join('')}</svg><p style="color:var(--muted);font-size:.75rem">As of ${today()} · Source: your entries ${tag('MANUAL')}</p>`;
+  return `<svg viewBox="0 0 ${items.length * 70} 150" style="width:100%">${items.map((i, ix) => `<rect class="bar" style="animation-delay:${ix * 60}ms" x="${ix * 70 + 12}" y="${140 - i.v / max * 120}" width="42" height="${i.v / max * 120}" rx="6" fill="${i.c || '#1B7A43'}"/><text x="${ix * 70 + 33}" y="150" font-size="9" text-anchor="middle" fill="#6B7268">${i.l}</text>`).join('')}</svg><p style="color:var(--muted);font-size:.75rem">As of ${today()} · Source: your entries ${tag('MANUAL')}</p>`;
 }
+function animateNums() { document.querySelectorAll('.kpi .num').forEach(el => { const m = el.textContent.match(/^([^0-9-]*)([0-9][0-9,]*\.?[0-9]*)(.*)$/); if (!m) return; const target = parseFloat(m[2].replace(/,/g, '')); if (!isFinite(target) || target === 0) return; const start = performance.now(); const step = now => { const p = Math.min(1, (now - start) / 800); const v = target * (1 - Math.pow(1 - p, 4)); el.textContent = m[1] + (target % 1 ? v.toFixed(1) : Math.round(v).toLocaleString('en-PK')) + m[3]; if (p < 1) requestAnimationFrame(step); }; requestAnimationFrame(step); }); }
+function openTxnModal() { const o = document.createElement('div'); o.className = 'overlay'; o.innerHTML = `<div class="modal"><h3 style="margin-top:0">Add transaction</h3><form id="mform">${inp('desc', 'Description')}${inp('cat', 'Category')}<label>Type<select name="type"><option>income</option><option>expense</option><option>transfer</option></select></label>${inp('amount', 'Amount', 'number', 'step="any" required')}<div style="display:flex;gap:.6rem"><button class="btn" id="msave">Save</button><button class="btn ghost" type="button" id="mcancel">Cancel</button></div></form></div>`; document.body.appendChild(o); const close = () => o.remove(); o.addEventListener('click', e => { if (e.target === o) close(); }); o.querySelector('#mcancel').onclick = close; o.querySelector('#mform').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); const btn = o.querySelector('#msave'); btn.innerHTML = '<span class="spin"></span>'; setTimeout(() => { S.transactions.unshift({ id: id(), date: today(), desc: f.get('desc'), cat: f.get('cat'), type: f.get('type'), amount: +f.get('amount') }); save(); close(); toast('Transaction saved ✓'); route = 'transactions'; renderApp(); }, 450); }; }
 function ring(score) {
   const c = 2 * Math.PI * 46, off = score == null ? c : c * (1 - score / 100);
   return `<svg class="ring" viewBox="0 0 110 110"><circle class="bgc" cx="55" cy="55" r="46"/><circle class="fgc" cx="55" cy="55" r="46" stroke-dasharray="${c}" stroke-dashoffset="${off}"/><text x="55" y="60" text-anchor="middle" font-size="20" font-weight="700" fill="#14532D">${score == null ? '—' : score}</text></svg>`;
@@ -135,10 +137,13 @@ function renderApp() {
   document.querySelectorAll('[data-route]').forEach(b => b.onclick = () => { route = b.dataset.route; activeTool = null; renderApp(); });
   $('#logout').onclick = () => { session = null; localStorage.removeItem('barakah:session'); renderAuth(); };
   $('#topbar').innerHTML = `<div><b class="serif" style="font-size:1.25rem">${NAV.flatMap(x => x[1]).find(x => x[0] === route)?.[1] || 'Barakah OS'}</b> <span class="tag demo">DEMO DATA</span></div>
-    <div><button class="btn ghost small" id="dark">🌙 Dark</button> <button class="btn small" id="quick-add">+ Add transaction</button></div>`;
+    <div><a class="btn gold small" href="components.html">🧩 Design Preview</a> <button class="btn ghost small" id="dark">🌙 Dark</button> <button class="btn small" id="quick-add">+ Add transaction</button></div>`;
   $('#dark').onclick = () => document.body.classList.toggle('dark');
-  $('#quick-add').onclick = () => { route = 'transactions'; renderApp(); };
+  $('#quick-add').onclick = openTxnModal;
   VIEWS[route]();
+  /* v4.0 choreography: staggered section reveal + KPI count-up (MOTION-SYSTEM.md) */
+  document.querySelectorAll('#view .card, #view .toolcard').forEach((el, i) => { el.classList.add('reveal'); el.style.animationDelay = (i * 60) + 'ms'; });
+  animateNums();
 }
 
 /* ---------- shared view helpers ---------- */
@@ -146,7 +151,7 @@ const view = html => { $('#view').innerHTML = html; };
 const form = (id, fields, submitLabel) => `<form class="inline" id="${id}">${fields}<button class="btn small">${submitLabel}</button></form>`;
 const inp = (name, label, type = 'text', extra = '') => `<label>${label}<input name="${name}" type="${type}" ${extra}></label>`;
 const delBtn = (kind, idv) => `<button class="btn danger small" data-del="${kind}:${idv}">Delete</button>`;
-function bindDel(kind, rerender) { document.querySelectorAll(`[data-del^="${kind}:"]`).forEach(b => b.onclick = () => { const i = b.dataset.del.split(':')[1]; S[kind] = S[kind].filter(x => x.id !== i); save(); rerender(); toast('Deleted'); }); }
+function bindDel(kind, rerender) { document.querySelectorAll(`[data-del^="${kind}:"]`).forEach(b => b.onclick = () => { const i = b.dataset.del.split(':')[1]; const ix = S[kind].findIndex(x => x.id === i); const [removed] = S[kind].splice(ix, 1); save(); rerender(); toast('Deleted', { label: 'Undo', fn: () => { S[kind].splice(ix, 0, removed); save(); rerender(); } }); }); }
 
 /* ---------- views ---------- */
 const VIEWS = {
