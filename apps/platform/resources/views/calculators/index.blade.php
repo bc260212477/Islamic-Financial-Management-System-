@@ -1,0 +1,7 @@
+<x-app-layout><x-slot name="header"><h2 class="font-semibold text-xl">Calculators & Islamic Finance</h2></x-slot><div class="py-8"><div class="max-w-6xl mx-auto px-4">@if(session('status'))<p class="mb-4">{{ session('status') }}</p>@endif
+
+<h3>Zakat (FIN-11)</h3><p>Net {{ number_format($zakat['net'],2) }} · Nisab (85g gold) {{ number_format($zakat['nisab'],2) }} · <strong>Zakat payable {{ number_format($zakat['zakat'],2) }}</strong> · {{ $zakat['eligible']?'Due':'Below nisab' }} · progress {{ $zakat['progress'] }}%</p>
+<h3 class="mt-4">Shariah Screener</h3><p>Debt ≤33%: {{ $screen['debt_pass']?'✓':'✗' }} · Investments ≤30%: {{ $screen['inv_pass']?'✓':'✗' }} · {{ $screen['stars'] }}★ · {{ $screen['verdict'] }} (screening aid, not a fatwa)</p>
+<h3 class="mt-4">CAGR (FIN-20)</h3><p>{{ $cagr }}% — formula (end/start)^(1/years)−1. Loan comparisons must label riba-based vs Islamic profit-sharing; never call interest "profit".</p>
+<form method="GET"><input name="cash" placeholder="Cash" value="{{ request('cash',18500) }}"> <input name="gold_value" placeholder="Gold value" value="{{ request('gold_value',4200) }}"> <input name="debts" placeholder="Debts" value="{{ request('debts',2100) }}"> <input name="gold_price" placeholder="Gold/g" value="{{ request('gold_price',78) }}"> <input name="debt_ratio" placeholder="Debt %" value="{{ request('debt_ratio',28) }}"> <input name="inv_ratio" placeholder="Inv %" value="{{ request('inv_ratio',24) }}"> <button>Recalculate</button></form>
+</div></div></x-app-layout>
