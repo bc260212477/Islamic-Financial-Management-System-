@@ -89,3 +89,6 @@ Then open <http://127.0.0.1:4173/>.
 - [ ] No console errors; layout works down to 375px wide
 
 **Do not start v1.1 until this checklist passes.** Report any defects as a clear list.
+## 🌐 Web SaaS (apps/web) — the clickable product
+Full Barakah OS in the browser: login/demo workspace, Dashboard, Accounts, Transactions, Budgets, Goals, Cash Flow, Businesses, Holdings, PSX screener (DEMO-labelled), **Tools Hub** (Zakat, Halal Screener, Purification, Riba Detector, Debt Payoff, Goal Planner, Inflation, PK Tax, Subscription Audit), Islamic Finance, Family, Habits, Tasks, Growth, Health, Legacy, AI Decision OS, Reports, Plans/Settings. Demo login: `demo@barakah.local` / `password` (FICTIONAL data, browser-local). Run: `python3 -m http.server 8080 --directory apps/web`. Details: docs/00-project/WEB-SAAS.md. Production backend remains the Laravel platform below.
+
