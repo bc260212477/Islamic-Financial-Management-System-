@@ -1,0 +1,5 @@
+# SKILL: UI Implementation
+**Use when:** building any screen/component.
+**Inputs:** PROJECT.md design tokens, PRD section, reference layout patterns (Finviz/StockIntel/FinSight/Quantro — patterns only, no copied assets). **Outputs:** components using shared primitives; no local formula logic.
+Rules: GlassCard/Btn/Badge/StatCard/KpiRing primitives only; tokens from PROJECT.md (never #FFF/#000, never a UI kit or chart lib); Cormorant Garamond numerals, Inter UI; pure SVG charts (rings = stroke-dasharray with exact % + label + as_of); every figure shows currency/period/source-date where applicable; loading/empty("No data")/error/stale states designed, not afterthoughts. Market screens: all widgets consume the single `MarketScope` context; no widget-private filters. Responsive: grid collapses per PROJECT.md, 375px smoke, tap targets ≥40px, focus-visible outlines, reduced-motion respected. Sadaqah/positive = green token, over-budget/negative = red token, primary action = gold.
+Done when: design review vs PROJECT.md passes, totals match API (never recomputed in UI), console clean.

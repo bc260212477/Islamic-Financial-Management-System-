@@ -2,6 +2,12 @@
 
 Personal Islamic finance dashboard, currently implemented through **v1.0**.
 
+## Platform planning (Arena build contract)
+
+The full technical plan for evolving Barakah into the Complete Financial Intelligence Platform is in **[TECHNICAL-PLAN.md](TECHNICAL-PLAN.md)**, with the binding companion files: [SOUL.md](SOUL.md) · [AGENTS.md](AGENTS.md) · [PROJECT.md](PROJECT.md) · [PRD.md](PRD.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [DATABASE.md](DATABASE.md) · [FINANCIAL-RULES.md](FINANCIAL-RULES.md) · [ISLAMIC-FINANCE.md](ISLAMIC-FINANCE.md) · [DATA-SOURCES.md](DATA-SOURCES.md) · [SECURITY.md](SECURITY.md) · [TESTING.md](TESTING.md) · [ROADMAP.md](ROADMAP.md) · [DECISIONS.md](DECISIONS.md) · [skills/](skills/)
+
+Build order is **[ROADMAP.md](ROADMAP.md)** — one phase at a time, owner-tested. Current status: Phase 0 (planning) complete; Phase 1 (static v1.1 charts) awaits owner approval.
+
 ## View it on GitHub Pages
 
 **Live URL (once Pages is enabled):** <https://bc260212477.github.io/Islamic-Financial-Management-System-/>
