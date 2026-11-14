@@ -10,7 +10,7 @@ All documents live in **[docs/](docs/)** — see the full map in **[docs/PROJECT
 
 The full technical plan for evolving Barakah into the Complete Financial Intelligence Platform is in **[docs/01-architecture/TECHNICAL-PLAN.md](docs/01-architecture/TECHNICAL-PLAN.md)**, with binding companions: [PROJECT](docs/00-project/PROJECT.md) · [PRD](docs/00-project/PRD.md) · [ARCHITECTURE](docs/01-architecture/ARCHITECTURE.md) · [DATABASE](docs/01-architecture/DATABASE.md) · [FINANCIAL-RULES](docs/02-finance/FINANCIAL-RULES.md) · [ISLAMIC-FINANCE](docs/02-finance/ISLAMIC-FINANCE.md) · [DATA-SOURCES](docs/02-finance/DATA-SOURCES.md) · [SOUL](docs/03-governance/SOUL.md) · [AGENTS](docs/03-governance/AGENTS.md) · [ROADMAP](docs/03-governance/ROADMAP.md) · [DECISIONS](docs/03-governance/DECISIONS.md) · [SECURITY](docs/03-governance/SECURITY.md) · [TESTING](docs/03-governance/TESTING.md) · [skills/](skills/)
 
-Build order is **[docs/03-governance/ROADMAP.md](docs/03-governance/ROADMAP.md)** — one phase at a time, owner-tested. Current status: Phase 0 (planning) + Phase 1 (static v1.1 charts) built; repo reorganised into folders (D-010).
+Build order is **[docs/03-governance/ROADMAP.md](docs/03-governance/ROADMAP.md)** — one phase at a time, owner-tested. Current status: **static roadmap complete (v1.0–v2.0) + improvement pass (D-011)** — investments, cash flow, zakat, Shariah screener, Islamic banks, CSV import/export, backup/restore, search/filter/delete, budget edit, PKR/USD display toggle, dark mode, print view, PWA manifest. Platform phases (Next.js/API/PSX/AI) remain in ROADMAP and need owner accounts/keys.
 
 ## v1.1 test checklist (Phase 1)
 

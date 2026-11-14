@@ -1,6 +1,6 @@
 # ROADMAP.md — Phased Build Plan (Copy-Paste Prompts for Arena)
 
-Rule: one phase at a time. Owner tests + approves before the next prompt is used. Status: P0 done (plan files, PR #3); **Phase 1 built** (static v1.1 charts) — pending owner test/approval; Phases 2–8 pending.
+Rule: one phase at a time. Owner tests + approves before the next prompt is used. Status: P0 done; Phase 1 done; **static v1.2–v2.0 completed inside apps/static-v1 (D-011)** pending owner test; platform Phases 2–8 pending owner accounts/keys (Supabase/Vercel/PSX data terms).
 
 ## Phase 0 — Planning & Arena files ✅
 Deliverable: TECHNICAL-PLAN.md + SOUL/AGENTS/PROJECT/PRD/ARCHITECTURE/DATABASE/FINANCIAL-RULES/ISLAMIC-FINANCE/DATA-SOURCES/SECURITY/TESTING/ROADMAP/DECISIONS + skills/*/SKILL.md. Acceptance: owner reads TECHNICAL-PLAN §§1–2, 13, 16 and approves stack + D-001/D-008.

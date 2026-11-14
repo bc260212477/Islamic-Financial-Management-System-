@@ -1,0 +1,9 @@
+{
+  "name": "Barakah Finance",
+  "short_name": "Barakah",
+  "description": "Private Islamic finance dashboard — expenses, cash flow, investments, zakat, Shariah screening.",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#F7F4EC",
+  "theme_color": "#F7F4EC"
+}
