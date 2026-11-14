@@ -1,4 +1,5 @@
 import { zakat, purification, screenStock, ribaCheck, debtPayoff, goalMonthly, inflate, taxEstimatorPK, healthScore } from './formulas.mjs';
+import { SUPABASE } from './supabase-config.mjs';
 
 /* Barakah OS — web SaaS front-end.
    Data: per-user, browser-local (localStorage). Demo seed is FICTIONAL and labelled DEMO.
