@@ -1,7 +1,7 @@
 # ROADMAP.md — Phased Implementation Prompts for Arena (Laravel Platform)
 
 Delivery protocol (binding): one phase per prompt. Each prompt is self-contained: Goal / Prerequisites / Files / Acceptance / Demo / Stop. Arena executes, reports evidence, and **stops** for owner approval. Stack: STACK-AUDIT.md (Laravel 13, PostgreSQL, Blade+Bootstrap 5.3+Tabler). Prototype `apps/static-v1` = design reference only (D-013). PHP verification via GitHub Actions (D-014).
-Status: **Phase 0 ✅ · Phase 1 ✅** · Phases 2–15 pending.
+Status: **Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅** (Laravel 13.42 scaffold in CI run 43602205569; Postgres CI green in run 43602426298 — migrate:fresh --seed + full PHPUnit incl. TenantIsolationTest) · Phases 3–15 pending.
 
 ---
 
@@ -11,7 +11,7 @@ Goal: audit repo + stack versions. Done: docs/01-architecture/STACK-AUDIT.md (La
 ### Prompt 1 — Agent Operating System files ✅
 Goal: full `docs/` file set + 8 skills, no code. Done: PROJECT/PRD (+F12–F15), ARCHITECTURE, DATABASE, FINANCIAL-RULES (FIN-01…21 incl. health score), ISLAMIC-FINANCE, DATA-SOURCES (+data-modes), SECURITY (+Laravel map), UI-DESIGN, TESTING, ROADMAP, DECISIONS (D-012…15), CONTRIBUTING, skills incl. kpi-computation.
 
-### Prompt 2 — Laravel skeleton, migrations, auth, RBAC
+### Prompt 2 — Laravel skeleton, migrations, auth, RBAC ✅
 Goal: runnable Laravel 13 app in `apps/platform` with auth + tenant isolation.
 Prerequisites: Phase 1 approved; PHP 8.3+/Composer via CI or owner machine (D-014).
 Files: `apps/platform/**` (composer create-project laravel/laravel:^13), `.env.example`, migrations for users/roles/accounts/categories (DATABASE.md), auth (Breeze Blade), tenant global scope, CI workflow `ci.yml` (setup-php 8.3, Postgres service, Pint, PHPUnit).
