@@ -55,6 +55,10 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with: { name: migrate-log, path: 'apps/platform/migrate.log' }
+      - name: Surface test failures as annotations
+        if: failure()
+        working-directory: ${{ github.workspace }}
+        run: grep -E "FAIL|Failed|Error|Tests:|✗|⨯" apps/platform/phpunit.log | head -20 | while IFS= read -r line; do echo "::error::$line"; done; true
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
