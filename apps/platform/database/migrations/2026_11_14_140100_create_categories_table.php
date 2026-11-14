@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('user_id')->nullable()->constrained()->cascadeOnDelete(); // null = system seed
+            $table->foreignId('user_id')->nullable()->constrained()->cascadeOnDelete(); // null = system seed
             $table->string('kind', 10); // income|expense
             $table->string('name');
             $table->string('color', 9)->default('#C9A227');
