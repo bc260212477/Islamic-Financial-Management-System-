@@ -7,7 +7,7 @@ Deliverable: TECHNICAL-PLAN.md + SOUL/AGENTS/PROJECT/PRD/ARCHITECTURE/DATABASE/F
 
 ## Phase 1 — Static app v1.1 charts (keeps live demo improving)
 ```
-Arena: Read BARAKAH-PROJECT.md Prompt v1.1 and AGENTS.md. On the existing static app only (index.html/app.js/styles.css), add the Monthly Spend SVG bar chart (trend data in BARAKAH-PROJECT v1.1, current bar gold gradient, dashed gridlines, rounded tops) and the Category Donut (group expenses by category, stroke-dasharray segments, centre = total, top-5 legend) in a 1.1fr/1fr grid below the stat cards. Pure SVG, no libraries, design tokens unchanged. Verify totals equal the expense sum (seed 3055). Do not build v1.2 features. Report test results, keep GitHub Pages deploy green.
+Arena: Read BARAKAH-PROJECT.md Prompt v1.1 and AGENTS.md. On the existing static app only (apps/static-v1/index.html|app.js|styles.css), add the Monthly Spend SVG bar chart (trend data in BARAKAH-PROJECT v1.1, current bar gold gradient, dashed gridlines, rounded tops) and the Category Donut (group expenses by category, stroke-dasharray segments, centre = total, top-5 legend) in a 1.1fr/1fr grid below the stat cards. Pure SVG, no libraries, design tokens unchanged. Verify totals equal the expense sum (seed 3055). Do not build v1.2 features. Report test results, keep GitHub Pages deploy green.
 ```
 
 ## Phase 2 — Platform shell (Next.js + design system)

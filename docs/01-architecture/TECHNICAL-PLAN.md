@@ -95,7 +95,7 @@ Vercel (web, preview per PR), Render/Railway (API Docker), Supabase (Postgres + 
 
 ## 14. Arean (Arena) instruction files — full content
 
-`SOUL.md, AGENTS.md, PROJECT.md, PRD.md, ARCHITECTURE.md, DATABASE.md, FINANCIAL-RULES.md, ISLAMIC-FINANCE.md, DATA-SOURCES.md, SECURITY.md, TESTING.md, ROADMAP.md, DECISIONS.md` at repo root, and `skills/{financial-calculations,financial-research,database-design,security-review,testing,ui-implementation,market-analysis}/SKILL.md`. These files are the build contract; this plan summarises them, they govern details.
+The 13 instruction files under `docs/` (`00-project/`, `01-architecture/`, `02-finance/`, `03-governance/` — map: `docs/PROJECT-TREE.md`), and `skills/{financial-calculations,financial-research,database-design,security-review,testing,ui-implementation,market-analysis}/SKILL.md`. These files are the build contract; this plan summarises them, they govern details.
 
 On `GitHub-Repos-` (inspected 2026-11-14: catalogues `*.csv` per category + `agent_architect.py`, described as an AI-research catalogue): treat it as a **discovery catalogue only**. Arena may propose candidates from `ai-agents-orchestration.csv`, `memory-search-databases.csv`, `research-education.csv`, `security-privacy.csv`, `coding-agents-developer-tools.csv` — but each candidate requires license (prefer MIT/Apache-2.0), maintenance (commit within 12 months), dependency and security review recorded in DECISIONS.md before adoption. No bulk tooling. Custom financial logic is built in-repo, never imported from catalogue projects.
 

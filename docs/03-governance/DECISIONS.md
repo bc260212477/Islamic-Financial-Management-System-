@@ -13,6 +13,8 @@ Append-only. Never rewrite history; supersede with a new entry.
 - **D-008 Auth provider deferred to Phase 3 kickoff** (FastAPI JWT default; Supabase Auth alternative). Must be decided and recorded before Phase 3 code.
 - **D-009 PKR primary.** Legacy v1.0 seed/examples in USD remain in the static demo; platform seeds are PKR (Phase 4 data migration note).
 
+- **D-010 (2026-11-14) Repository reorganised into folders.** All documents moved under `docs/` (`00-project/01-architecture/02-finance/03-governance`, map in `docs/PROJECT-TREE.md`); shipped demo moved to `apps/static-v1/` and the Pages workflow now publishes that folder; `skills/` unchanged. Root keeps only `README.md` + folders. Moves only + link/path fixes; no content or behaviour change.
+
 ## Risks
 - **R-01 PSX data access/ToS changes** — Mitigation: multi-source cross-check, staged pipeline, stale-date labelling, manual CSV fallback. Owner: verify PSX data terms before Phase 5.
 - **R-02 Hallucinated financial/AI numbers** — RAG-only + verifier + citation tests (TESTING.md). Residual: medium → monitored via ai_messages.audit.
