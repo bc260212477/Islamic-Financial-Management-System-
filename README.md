@@ -4,18 +4,19 @@ Personal Islamic finance dashboard, currently implemented through **v1.0**.
 
 ## View it on GitHub Pages
 
-Expected project URL:
+**Live URL (once Pages is enabled):** <https://bc260212477.github.io/Islamic-Financial-Management-System-/>
 
-<https://bc260212477.github.io/Islamic-Financial-Management-System-/>
+The repo is public and the automation token has admin on the repo, but only
+`pages=read` on the Pages API — so GitHub will not let automation *create*
+the Pages site (`Resource not accessible by integration`). The owner must
+flip one setting, once:
 
-GitHub Pages is not enabled yet because this repository is private and the current automation token does not have repository-admin permission. To publish it:
+1. Open <https://github.com/bc260212477/Islamic-Financial-Management-System-/settings/pages>
+2. Under **Build and deployment → Source**, choose **GitHub Actions**.
+3. Then run/approve the **Deploy Barakah Finance** workflow (Actions tab), or
+   push to `main` — the workflow at `.github/workflows/deploy-pages.yml` deploys it.
 
-1. Open **Settings → Pages** in the repository.
-2. Under **Build and deployment**, choose **GitHub Actions**.
-3. Approve/run the **Deploy Barakah Finance** workflow if GitHub asks for approval.
-4. Open the project URL above after the workflow completes.
-
-The workflow is already committed at `.github/workflows/deploy-pages.yml`; future pushes to `main` will redeploy the site.
+Future pushes to `main` will redeploy the site automatically.
 
 ## Local preview
 
