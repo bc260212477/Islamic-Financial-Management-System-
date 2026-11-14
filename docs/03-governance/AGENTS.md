@@ -1,7 +1,7 @@
 # AGENTS.md — Main Development Instructions (Arena)
 
 ## Read order (every session)
-1. `SOUL.md` 2. `TECHNICAL-PLAN.md` 3. `ROADMAP.md` (find current phase) 4. The file(s) governing your task: PRD.md / ARCHITECTURE.md / DATABASE.md / FINANCIAL-RULES.md / ISLAMIC-FINANCE.md / DATA-SOURCES.md / SECURITY.md / TESTING.md 5. The relevant `skills/*/SKILL.md`.
+All documents live under `docs/` (map: `docs/PROJECT-TREE.md`). 1. `docs/03-governance/SOUL.md` 2. `docs/01-architecture/TECHNICAL-PLAN.md` 3. `docs/03-governance/ROADMAP.md` (find current phase) 4. The file(s) governing your task under `docs/00-project|01-architecture|02-finance|03-governance` 5. The relevant `skills/*/SKILL.md`.
 
 ## Non-negotiables
 - Build **only the current ROADMAP phase**. Do not skip ahead or add unlisted features.
@@ -21,7 +21,7 @@
 6. Stop. Owner tests live/preview link and approves before next phase.
 
 ## Repo conventions
-- Current shipped app (root `index.html/app.js/styles.css`) is the static v1.0 — do not break its GitHub Pages deploy until Phase 4 cutover (DECISIONS D-001).
+- Current shipped app (`apps/static-v1/index.html|app.js|styles.css`) is the static demo — do not break its GitHub Pages deploy (workflow publishes `apps/static-v1`) until Phase 4 cutover (DECISIONS D-001).
 - Platform code (from Phase 2): `apps/web` (Next.js), `apps/api` (FastAPI), `apps/api/app/calculators` (pure formulas), `infra/` (docker, CI). Create only when the phase starts.
 - Commits: imperative, scoped (`feat(market): sector KPI rings`). One phase-slice per PR where practical.
 - External candidates from `bc260212477/GitHub-Repos-` catalogues: propose in DECISIONS.md with license/last-commit/dependency review; adopt only after owner approval.

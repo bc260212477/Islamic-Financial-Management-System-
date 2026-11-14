@@ -2,11 +2,15 @@
 
 Personal Islamic finance dashboard, currently implemented through **v1.0**.
 
+## Repository organisation
+
+All documents live in **[docs/](docs/)** — see the full map in **[docs/PROJECT-TREE.md](docs/PROJECT-TREE.md)**. The live app is in `apps/static-v1/`; reusable agent skills are in `skills/`.
+
 ## Platform planning (Arena build contract)
 
-The full technical plan for evolving Barakah into the Complete Financial Intelligence Platform is in **[TECHNICAL-PLAN.md](TECHNICAL-PLAN.md)**, with the binding companion files: [SOUL.md](SOUL.md) · [AGENTS.md](AGENTS.md) · [PROJECT.md](PROJECT.md) · [PRD.md](PRD.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [DATABASE.md](DATABASE.md) · [FINANCIAL-RULES.md](FINANCIAL-RULES.md) · [ISLAMIC-FINANCE.md](ISLAMIC-FINANCE.md) · [DATA-SOURCES.md](DATA-SOURCES.md) · [SECURITY.md](SECURITY.md) · [TESTING.md](TESTING.md) · [ROADMAP.md](ROADMAP.md) · [DECISIONS.md](DECISIONS.md) · [skills/](skills/)
+The full technical plan for evolving Barakah into the Complete Financial Intelligence Platform is in **[docs/01-architecture/TECHNICAL-PLAN.md](docs/01-architecture/TECHNICAL-PLAN.md)**, with binding companions: [PROJECT](docs/00-project/PROJECT.md) · [PRD](docs/00-project/PRD.md) · [ARCHITECTURE](docs/01-architecture/ARCHITECTURE.md) · [DATABASE](docs/01-architecture/DATABASE.md) · [FINANCIAL-RULES](docs/02-finance/FINANCIAL-RULES.md) · [ISLAMIC-FINANCE](docs/02-finance/ISLAMIC-FINANCE.md) · [DATA-SOURCES](docs/02-finance/DATA-SOURCES.md) · [SOUL](docs/03-governance/SOUL.md) · [AGENTS](docs/03-governance/AGENTS.md) · [ROADMAP](docs/03-governance/ROADMAP.md) · [DECISIONS](docs/03-governance/DECISIONS.md) · [SECURITY](docs/03-governance/SECURITY.md) · [TESTING](docs/03-governance/TESTING.md) · [skills/](skills/)
 
-Build order is **[ROADMAP.md](ROADMAP.md)** — one phase at a time, owner-tested. Current status: Phase 0 (planning) complete; **Phase 1 (static v1.1 charts) built — awaiting owner test.**
+Build order is **[docs/03-governance/ROADMAP.md](docs/03-governance/ROADMAP.md)** — one phase at a time, owner-tested. Current status: Phase 0 (planning) + Phase 1 (static v1.1 charts) built; repo reorganised into folders (D-010).
 
 ## v1.1 test checklist (Phase 1)
 
@@ -36,7 +40,7 @@ Future pushes to `main` will redeploy the site automatically.
 From the repository root, run:
 
 ```bash
-python3 -m http.server 4173
+python3 -m http.server 4173 --directory apps/static-v1
 ```
 
 Then open <http://127.0.0.1:4173/>.
@@ -49,7 +53,7 @@ Then open <http://127.0.0.1:4173/>.
 - [ ] "+ Add expense" → add one → it appears in Recent activity and Spent/Sadaqah totals update
 - [ ] Refresh the page — the added expense is still there (localStorage)
 - [ ] Add expenses past $3,200 total — the note turns red and reads "$X over $3,200"
-- [ ] Placeholder cards are shown for v1.1–v1.6 features (not yet built, per `BARAKAH-PROJECT.md`)
+- [ ] Placeholder cards are shown for v1.1–v1.6 features (not yet built, per `docs/00-project/BARAKAH-PROJECT.md`)
 - [ ] No console errors; layout works down to 375px wide
 
 **Do not start v1.1 until this checklist passes.** Report any defects as a clear list.
