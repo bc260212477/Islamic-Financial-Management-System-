@@ -28,8 +28,8 @@ class FinanceFlowTest extends TestCase
     {
         [$u, $a] = $this->userWithAccount();
         $b2 = Account::withoutGlobalScopes()->create(['user_id' => $u->id, 'name' => 'Cash', 'kind' => 'cash', 'currency' => 'PKR', 'opening_balance' => 0]);
-        $biz = Business::create(['name' => 'Shop']);
         $this->actingAs($u);
+        $biz = Business::create(['name' => 'Shop']);
         Transaction::create(['account_id' => $a->id, 'direction' => 'in', 'type' => 'job', 'counterparty' => 'Salary', 'amount' => 1000, 'currency' => 'PKR', 'date' => today()]);
         Transaction::create(['account_id' => $a->id, 'business_id' => $biz->id, 'direction' => 'in', 'type' => 'business', 'counterparty' => 'Sale', 'amount' => 500, 'currency' => 'PKR', 'date' => today()]);
         $this->post('/transactions/transfer', ['from_account_id' => $a->id, 'to_account_id' => $b2->id, 'amount' => 200, 'date' => today()->toDateString()])->assertRedirect();

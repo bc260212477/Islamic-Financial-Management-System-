@@ -7,7 +7,7 @@ class MarketController extends Controller {
         $sectors = MarketSector::where('index_code',$index)->with('instruments')->get();
         $sector = $r->input('sector') ? $sectors->firstWhere('id',$r->input('sector')) : null;
         $instruments = $sector ? $sector->instruments : $sectors->flatMap->instruments;
-        $rows = $instruments->map(function($i){ $p = MarketPrice::where('instrument_id',$i->id)->orderByDesc('date')->first(); return ['instrument'=>$i,'price'=>$p]; })->filter(fn($x)=>$p!==null);
+        $rows = $instruments->map(function($i){ $p = MarketPrice::where('instrument_id',$i->id)->orderByDesc('date')->first(); return ['instrument'=>$i,'price'=>$p]; })->filter(fn($x) => $x['price'] !== null);
         $totalCap = $rows->sum(fn($x)=>(float)$x['instrument']->market_cap);
         $adv = $rows->filter(fn($x)=>(float)$x['price']->change_pct>0)->count(); $dec = $rows->filter(fn($x)=>(float)$x['price']->change_pct<0)->count();
         $kpis = [['label'=>'Advancers %','value'=>$rows->count()?round($adv/$rows->count()*100,1):null,'method'=>'advancers / listed in scope (FIN-08)'],
