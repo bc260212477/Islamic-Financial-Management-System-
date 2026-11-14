@@ -7,6 +7,9 @@ on:
     paths: ['apps/platform/**', '.github/workflows/platform-ci.yml']
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   tests:
     runs-on: ubuntu-latest
@@ -44,9 +47,39 @@ jobs:
       - run: npm ci && npm run build
       - run: cp .env.example .env && php artisan key:generate
       - name: Migrations run on PostgreSQL
-        run: php artisan migrate:fresh --seed --force
+        run: php artisan migrate:fresh --seed --force 2>&1 | tee migrate.log; exit ${PIPESTATUS[0]}
       - name: PHPUnit (PostgreSQL)
         run: php artisan test --log-junit junit.xml 2>&1 | tee phpunit.log; exit ${PIPESTATUS[0]}
+      - name: Surface migrate errors as annotations
+        if: failure()
+        working-directory: ${{ github.workspace }}
+        run: grep -iE "error|exception|SQLSTATE|does not exist|already exists" apps/platform/migrate.log | head -15 | while IFS= read -r line; do echo "::error::$line"; done; true
+      - name: Upload migrate log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: migrate-log, path: 'apps/platform/migrate.log' }
+      - name: Write test failures to job summary
+        if: failure()
+        working-directory: apps/platform
+        run: |
+          python3 - << 'PYEOF'
+          import xml.etree.ElementTree as ET, os
+          try:
+              tree = ET.parse('junit.xml')
+              lines = ['## PHPUnit failures']
+              for tc in tree.iter('testcase'):
+                  for f in list(tc):
+                      if f.tag in ('failure','error'):
+                          lines.append(f"### {tc.get('classname')}::{tc.get('name')}")
+                          lines.append((f.text or '')[:1500])
+              open(os.environ['GITHUB_STEP_SUMMARY'],'a').write('\n'.join(lines) or 'no junit')
+          except Exception as e:
+              open(os.environ['GITHUB_STEP_SUMMARY'],'a').write(f'junit parse failed: {e}')
+          PYEOF
+      - name: Surface test failures as annotations
+        if: failure()
+        working-directory: ${{ github.workspace }}
+        run: grep -E "FAIL|Failed|Error|Tests:|✗|⨯" apps/platform/phpunit.log | head -20 | while IFS= read -r line; do echo "::error::$line"; done; true
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v4

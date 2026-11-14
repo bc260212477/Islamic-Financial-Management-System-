@@ -1,0 +1,8 @@
+<x-app-layout><x-slot name="header"><h2 class="font-semibold text-xl">Task & Routine OS</h2></x-slot><div class="py-8"><div class="max-w-6xl mx-auto px-4">@if(session('status'))<p class="mb-4">{{ session('status') }}</p>@endif
+
+<form method="POST" action="{{ route('tasks.store') }}">@csrf <input name="title" placeholder="Task" required> <select name="project_id"><option value="">No project</option>@foreach($projects as $p)<option value="{{ $p->id }}">{{ $p->name }}</option>@endforeach</select> <input name="due_date" type="date"> <select name="priority"><option>low</option><option selected>medium</option><option>high</option></select> <button>Add task</button></form>
+<div style="display:flex;gap:1rem" class="mt-4">@foreach(['todo'=>'To do','doing'=>'Doing','done'=>'Done'] as $st=>$label)<div style="flex:1"><h3>{{ $label }}</h3>@foreach($tasks->where('status',$st) as $t)<p>{{ $t->title }} @if($t->due_date && $t->status!=='done' && $t->due_date < today())<strong style="color:#B4543F">OVERDUE</strong>@endif
+<form method="POST" action="{{ route('tasks.move',$t) }}">@csrf <select name="status"><option>todo</option><option>doing</option><option>done</option></select><button>Move</button></form></p>@endforeach</div>@endforeach</div>
+<h3 class="mt-6">Routines</h3><form method="POST" action="{{ route('routines.store') }}">@csrf <input name="name" placeholder="Routine name" required> <input name="days_of_week" placeholder="Mon-Fri"> <button>Add routine</button></form>
+@foreach($routines as $r)<p><strong>{{ $r->name }}</strong> ({{ $r->days_of_week }}) @foreach($r->items as $i)· {{ $i->time }} {{ $i->title }} ({{ $i->duration_minutes }}m) @endforeach</p>@endforeach
+</div></div></x-app-layout>

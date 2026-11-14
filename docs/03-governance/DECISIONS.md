@@ -33,6 +33,9 @@ Append-only. Never rewrite history; supersede with a new entry.
 
 - **Phases 3–15 executed continuously (2026-11-14, owner: 'don't stop, don't ask again').** Transactions+transfers (FIN-21 test), businesses P&L, goals, holdings + CSV import, market scope engine (Demo-labelled fictional seed; sector-scope test), zakat/screener calculators, FIN-19 health on dashboard, deterministic grounded assistant (citations + trade/fatwa refusal tests — external LLM wiring still requires owner's API key), CSV/print reports, Urdu locale + RTL + dark hooks, Dockerfile + DEPLOYMENT.md. Platform CI (PostgreSQL) green required before merge. Production hosting remains owner-provided (DEPLOYMENT.md honest status).
 
+- **D-016 (2026-11-14) Life OS expansion** (8 pillars, Elite Path levels 1–5) built as Laravel modules reusing tenant trait/calculators; D.A.I.L.Y. slices in docs/04-life-os/DAILY-BREAKDOWN.md. Family expenses create linked transactions (cash-flow truth stays in transactions).
+- **D-017 UI:** retain Laravel 13 + Breeze/Tailwind shell; adopt Metrica patterns (tokens, ApexCharts animated dashboard chart, one icon style in views) — no Bootstrap rebuild, no purchased template. Supersedes the Bootstrap-5 recommendation where it conflicts with the shipped shell.
+
 ## Supersessions (2026-11-14, latest master directive)
 - **D-012 Stack superseded: Laravel 13 + PostgreSQL + Blade/Bootstrap 5.3 + Tabler (MIT).** D-002 (Next.js/FastAPI) is superseded. Laravel 11 rejected: security support ended Mar 2026; Laravel 13 is current stable (PHP 8.3–8.5). Chart.js/DataTables/etc. now permitted (directive Part 5) — the earlier chart-lib ban applied to the static prototype only. Audit: docs/01-architecture/STACK-AUDIT.md.
 - **D-013 Static prototype = design reference/demo.** `apps/static-v1` stays live on Pages; the platform is built fresh in `apps/platform` (Laravel) from Phase 2. Do not grow the React file into the platform.
