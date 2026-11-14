@@ -75,3 +75,5 @@ Prereq: P14. Acceptance: TESTING release gate; `composer audit` clean or ADR exc
 
 ---
 Backlog (ADR required): real-time licensed PSX feed, broker integration, mobile apps, billing.
+## Directive v3.0 version map (D-018)
+Existing modules already cover: v0.1 Foundation ✅ (DAILY-V01 audit), v0.2 Money Core (mostly — gaps: budgets table, audit_logs table), v0.3 Cash Flow ✅, v0.4 Family ✅, v0.5 Habits ✅, v0.6 Tasks & Routine ✅, v0.7 Business ✅ (branches/receivables-lite gaps), v0.8 Investments ✅ (manual/CSV), v0.9 Islamic ✅ (planner 58 pending), v1.1 PSX engine ✅ (Demo/CSV data), v1.2 Learning & Growth (partial: journal/reading/skills/assessments ✅; courses/mentorship/networking 78–80 pending), v1.4 AI ✅ (deterministic; LLM key pending). Next build slices after founder approval of DAILY-V01: v0.2 gap closure → v1.0 Launch MVP polish → v1.3 Health (89–94) → v1.5 Advanced Money (51–58) → v1.6 Advanced Investments (59–66) → v1.7 Legacy & Community (84–88, 100) → v2.0 (95–99). One version per approval per Directive Part 12.
