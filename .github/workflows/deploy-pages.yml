@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       # NOTE: Pages must be enabled once by the repo owner in
       # Settings → Pages → Source: "GitHub Actions". The automation token
       # (pages=read) cannot create the Pages site via the API, so

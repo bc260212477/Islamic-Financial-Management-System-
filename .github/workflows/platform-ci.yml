@@ -2,6 +2,7 @@ name: Platform CI (Phase 2+)
 
 on:
   push:
+    branches: [main]
     paths: ['apps/platform/**', '.github/workflows/platform-ci.yml']
   pull_request:
     paths: ['apps/platform/**', '.github/workflows/platform-ci.yml']
@@ -35,13 +36,13 @@ jobs:
       DB_USERNAME: barakah
       DB_PASSWORD: secret
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: shivammathur/setup-php@v2
         with:
           php-version: '8.3'
           extensions: pdo_pgsql, pgsql, bcmath, intl, mbstring, xml, curl, zip
           tools: composer:v2
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with: { node-version: '20' }
       - run: composer install --no-interaction --prefer-dist
       - run: npm ci && npm run build
@@ -56,7 +57,7 @@ jobs:
         run: grep -iE "error|exception|SQLSTATE|does not exist|already exists" apps/platform/migrate.log | head -15 | while IFS= read -r line; do echo "::error::$line"; done; true
       - name: Upload migrate log
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with: { name: migrate-log, path: 'apps/platform/migrate.log' }
       - name: Write test failures to job summary
         if: failure()
@@ -82,5 +83,5 @@ jobs:
         run: grep -E "FAIL|Failed|Error|Tests:|✗|⨯" apps/platform/phpunit.log | head -20 | while IFS= read -r line; do echo "::error::$line"; done; true
       - name: Upload test diagnostics
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with: { name: phpunit-diagnostics, path: 'apps/platform/phpunit.log' }

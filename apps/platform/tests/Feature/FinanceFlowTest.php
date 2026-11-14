@@ -48,11 +48,11 @@ class FinanceFlowTest extends TestCase
 
             return $s;
         };
-        $energy = $mk('Energy', 'E1', 5);
-        $banks = $mk('Banks', 'B1', -5);
+        $energy = $mk('Energy', 'ENRGX', 5);
+        $banks = $mk('Banks', 'BANKX', -5);
         $this->actingAs($u);
-        $e = $this->get('/market?sector='.$energy->id)->assertOk()->assertSee('E1')->assertDontSee('B1');
-        $this->get('/market?sector='.$banks->id)->assertOk()->assertSee('B1')->assertDontSee('E1');
+        $e = $this->get('/market?sector='.$energy->id)->assertOk()->assertSee('ENRGX')->assertDontSee('BANKX');
+        $this->get('/market?sector='.$banks->id)->assertOk()->assertSee('BANKX')->assertDontSee('ENRGX');
     }
 
     public function test_assistant_cites_and_refuses_trades(): void
