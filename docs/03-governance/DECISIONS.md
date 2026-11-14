@@ -15,6 +15,8 @@ Append-only. Never rewrite history; supersede with a new entry.
 
 - **D-010 (2026-11-14) Repository reorganised into folders.** All documents moved under `docs/` (`00-project/01-architecture/02-finance/03-governance`, map in `docs/PROJECT-TREE.md`); shipped demo moved to `apps/static-v1/` and the Pages workflow now publishes that folder; `skills/` unchanged. Root keeps only `README.md` + folders. Moves only + link/path fixes; no content or behaviour change.
 
+- **D-011 (2026-11-14) Static roadmap completed + improvement pass (owner instruction: complete today, no questions).** apps/static-v1 now implements BARAKAH-PROJECT v1.2–v2.0: investments table+modal, cash flow, zakat, Shariah screener, Islamic banks, PapaParse CSV import + JSON export, plus backup/restore, reset demo data, expense/income/holding delete, expense search/filter, editable budget, PKR display toggle (USD×280, labelled display-only — replace with dated SBP rate before financial use), dark mode, print CSS, PWA manifest, meta description. All data stays in localStorage on-device. Platform rebuild (Phases 2–8) unchanged and requires owner-controlled Supabase/Vercel accounts + PSX data-terms confirmation.
+
 ## Risks
 - **R-01 PSX data access/ToS changes** — Mitigation: multi-source cross-check, staged pipeline, stale-date labelling, manual CSV fallback. Owner: verify PSX data terms before Phase 5.
 - **R-02 Hallucinated financial/AI numbers** — RAG-only + verifier + citation tests (TESTING.md). Residual: medium → monitored via ai_messages.audit.
