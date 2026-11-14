@@ -6,7 +6,14 @@ Personal Islamic finance dashboard, currently implemented through **v1.0**.
 
 The full technical plan for evolving Barakah into the Complete Financial Intelligence Platform is in **[TECHNICAL-PLAN.md](TECHNICAL-PLAN.md)**, with the binding companion files: [SOUL.md](SOUL.md) · [AGENTS.md](AGENTS.md) · [PROJECT.md](PROJECT.md) · [PRD.md](PRD.md) · [ARCHITECTURE.md](ARCHITECTURE.md) · [DATABASE.md](DATABASE.md) · [FINANCIAL-RULES.md](FINANCIAL-RULES.md) · [ISLAMIC-FINANCE.md](ISLAMIC-FINANCE.md) · [DATA-SOURCES.md](DATA-SOURCES.md) · [SECURITY.md](SECURITY.md) · [TESTING.md](TESTING.md) · [ROADMAP.md](ROADMAP.md) · [DECISIONS.md](DECISIONS.md) · [skills/](skills/)
 
-Build order is **[ROADMAP.md](ROADMAP.md)** — one phase at a time, owner-tested. Current status: Phase 0 (planning) complete; Phase 1 (static v1.1 charts) awaits owner approval.
+Build order is **[ROADMAP.md](ROADMAP.md)** — one phase at a time, owner-tested. Current status: Phase 0 (planning) complete; **Phase 1 (static v1.1 charts) built — awaiting owner test.**
+
+## v1.1 test checklist (Phase 1)
+
+- [ ] "Monthly Spend" bar chart (last 6 months) renders below the stat cards; Jan bar is gold, earlier bars soft white; totals shown (Jan $3,055)
+- [ ] "Where it went" donut centre = your current expense total; legend lists top 5 categories with amounts + %
+- [ ] Add an expense → donut + legend + centre total update immediately (bar chart is the fixed 6-month trend per spec)
+- [ ] Charts stack to one column on mobile; no console errors
 
 ## View it on GitHub Pages
 
