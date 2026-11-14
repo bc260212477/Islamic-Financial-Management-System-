@@ -1,7 +1,7 @@
 # ROADMAP.md — Phased Implementation Prompts for Arena (Laravel Platform)
 
 Delivery protocol (binding): one phase per prompt. Each prompt is self-contained: Goal / Prerequisites / Files / Acceptance / Demo / Stop. Arena executes, reports evidence, and **stops** for owner approval. Stack: STACK-AUDIT.md (Laravel 13, PostgreSQL, Blade+Bootstrap 5.3+Tabler). Prototype `apps/static-v1` = design reference only (D-013). PHP verification via GitHub Actions (D-014).
-Status: **Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅** (Laravel 13.42 scaffold in CI run 43602205569; Postgres CI green in run 43602426298 — migrate:fresh --seed + full PHPUnit incl. TenantIsolationTest) · Phases 3–15 pending.
+Status: **Phase 0 ✅ · Phase 1 ✅ · Phase 2 ✅** (Laravel 13.42 scaffold in CI run 43602205569; Postgres CI green in run 43602426298 — migrate:fresh --seed + full PHPUnit incl. TenantIsolationTest) · **Phases 3–13 implemented** (CI-verified, see DECISIONS) · Phase 14 locale/RTL+dark hooks in · Phase 15 Dockerfile/runbook in; production deploy pending owner host.
 
 ---
 

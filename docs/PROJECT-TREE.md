@@ -26,6 +26,7 @@ Islamic-Financial-Management-System-/
 │       ├── AGENTS.md                # Arena build instructions (read order starts here + SOUL)
 │       ├── ROADMAP.md               # Phases 0–8, copy-paste build prompts
 │       ├── DECISIONS.md             # Decisions D-001… + risk register (append-only)
+│       ├── DEPLOYMENT.md            # Production runbook (Phase 15)
 │       ├── SECURITY.md              # Auth, encryption, privacy, retention
 │       ├── CONTRIBUTING.md          # Branch/PR/test conventions
 │       └── TESTING.md               # Formula/ingestion/API/E2E test plans
