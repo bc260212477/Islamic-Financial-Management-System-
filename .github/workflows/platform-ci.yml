@@ -58,17 +58,6 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with: { name: migrate-log, path: 'apps/platform/migrate.log' }
-      - name: Commit failure log to branch
-        if: failure()
-        run: |
-          tail -n 250 phpunit.log > ../CI-FAILURE.md || true
-          tail -n 100 migrate.log >> ../CI-FAILURE.md || true
-          cd "$GITHUB_WORKSPACE"
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add CI-FAILURE.md
-          git commit -m "CI failure diagnostics [skip ci]" || exit 0
-          git push origin "HEAD:${GITHUB_REF_NAME}" || true
       - name: Write test failures to job summary
         if: failure()
         working-directory: apps/platform
