@@ -47,6 +47,10 @@ jobs:
         run: php artisan migrate:fresh --seed --force 2>&1 | tee migrate.log; exit ${PIPESTATUS[0]}
       - name: PHPUnit (PostgreSQL)
         run: php artisan test --log-junit junit.xml 2>&1 | tee phpunit.log; exit ${PIPESTATUS[0]}
+      - name: Surface migrate errors as annotations
+        if: failure()
+        working-directory: ${{ github.workspace }}
+        run: grep -iE "error|exception|SQLSTATE|does not exist|already exists" apps/platform/migrate.log | head -15 | while IFS= read -r line; do echo "::error::$line"; done; true
       - name: Upload migrate log
         if: failure()
         uses: actions/upload-artifact@v4
