@@ -55,6 +55,24 @@ jobs:
         if: failure()
         uses: actions/upload-artifact@v4
         with: { name: migrate-log, path: 'apps/platform/migrate.log' }
+      - name: Write test failures to job summary
+        if: failure()
+        working-directory: apps/platform
+        run: |
+          python3 - << 'PYEOF'
+          import xml.etree.ElementTree as ET, os
+          try:
+              tree = ET.parse('junit.xml')
+              lines = ['## PHPUnit failures']
+              for tc in tree.iter('testcase'):
+                  for f in list(tc):
+                      if f.tag in ('failure','error'):
+                          lines.append(f"### {tc.get('classname')}::{tc.get('name')}")
+                          lines.append((f.text or '')[:1500])
+              open(os.environ['GITHUB_STEP_SUMMARY'],'a').write('\n'.join(lines) or 'no junit')
+          except Exception as e:
+              open(os.environ['GITHUB_STEP_SUMMARY'],'a').write(f'junit parse failed: {e}')
+          PYEOF
       - name: Surface test failures as annotations
         if: failure()
         working-directory: ${{ github.workspace }}
