@@ -13,6 +13,8 @@ Islamic-Financial-Management-System-/
 │   │   └── BARAKAH-PROJECT.md       # Original static v1.0–v2.0 spec (legacy, shipped)
 │   ├── 01-architecture/             # How it's built
 │   │   ├── TECHNICAL-PLAN.md        # Master 18-section technical specification
+│   │   ├── STACK-AUDIT.md           # Phase 0 repo/stack audit (Laravel 13)
+│   │   ├── UI-DESIGN.md             # Design tokens, KpiRing, RTL, chart guide
 │   │   ├── ARCHITECTURE.md          # System boundaries + API catalogue
 │   │   └── DATABASE.md              # Data models & relationships
 │   ├── 02-finance/                  # Financial & Islamic rules + data
@@ -25,6 +27,7 @@ Islamic-Financial-Management-System-/
 │       ├── ROADMAP.md               # Phases 0–8, copy-paste build prompts
 │       ├── DECISIONS.md             # Decisions D-001… + risk register (append-only)
 │       ├── SECURITY.md              # Auth, encryption, privacy, retention
+│       ├── CONTRIBUTING.md          # Branch/PR/test conventions
 │       └── TESTING.md               # Formula/ingestion/API/E2E test plans
 ├── skills/                          # Reusable Arena skills (one folder per skill)
 │   ├── financial-calculations/SKILL.md
@@ -35,6 +38,7 @@ Islamic-Financial-Management-System-/
 │   ├── ui-implementation/SKILL.md
 │   └── market-analysis/SKILL.md
 ├── apps/
+│   ├── platform/                    # Laravel app — created in Phase 2 (not yet)
 │   └── static-v1/                   # Shipped live demo (GitHub Pages publishes this folder)
 │       ├── index.html
 │       ├── styles.css

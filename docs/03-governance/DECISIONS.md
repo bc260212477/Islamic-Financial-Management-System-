@@ -28,3 +28,9 @@ Append-only. Never rewrite history; supersede with a new entry.
 
 ## Change log
 - 2026-11-14: Initial plan + Arena files created (TECHNICAL-PLAN.md and companions). Live static v1.0 verified at https://bc260212477.github.io/Islamic-Financial-Management-System-/.
+
+## Supersessions (2026-11-14, latest master directive)
+- **D-012 Stack superseded: Laravel 13 + PostgreSQL + Blade/Bootstrap 5.3 + Tabler (MIT).** D-002 (Next.js/FastAPI) is superseded. Laravel 11 rejected: security support ended Mar 2026; Laravel 13 is current stable (PHP 8.3–8.5). Chart.js/DataTables/etc. now permitted (directive Part 5) — the earlier chart-lib ban applied to the static prototype only. Audit: docs/01-architecture/STACK-AUDIT.md.
+- **D-013 Static prototype = design reference/demo.** `apps/static-v1` stays live on Pages; the platform is built fresh in `apps/platform` (Laravel) from Phase 2. Do not grow the React file into the platform.
+- **D-014 PHP cannot run in the Arena sandbox** (no PHP/Composer; Packagist unreachable). Phase 2+ PHP work is executed and verified via GitHub Actions (setup-php + Postgres service) or the owner's machine. Never claim PHP built/tested without CI evidence.
+- **D-015 Language:** English primary, Urdu secondary with RTL (Phase 14); all Blade strings via `__()` from Phase 2.
