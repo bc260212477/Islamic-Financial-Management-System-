@@ -1,0 +1,64 @@
+name: Scaffold Platform (Phase 2, one-time generator)
+
+# One-time generator: creates the Laravel 13 app in apps/platform using the
+# official installer on a real PHP runner, installs Breeze (Blade auth) and
+# spatie/laravel-permission (RBAC), then commits the result back to the
+# branch it was dispatched on. Safe to re-run: it skips if apps/platform
+# already contains a Laravel app.
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  scaffold:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Skip if already scaffolded
+        id: check
+        run: |
+          if [ -f apps/platform/artisan ]; then echo "exists=true" >> "$GITHUB_OUTPUT"; else echo "exists=false" >> "$GITHUB_OUTPUT"; fi
+
+      - name: Setup PHP 8.3
+        if: steps.check.outputs.exists == 'false'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          tools: composer:v2
+          extensions: pdo_pgsql, pgsql, bcmath, intl, mbstring, xml, curl, zip
+
+      - name: Setup Node 20
+        if: steps.check.outputs.exists == 'false'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Create Laravel 13 project
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          composer create-project laravel/laravel:^13.0 /tmp/barakah-app --no-interaction --prefer-dist
+          mkdir -p apps/platform
+          rsync -a --exclude='.git' /tmp/barakah-app/ apps/platform/
+
+      - name: Install Breeze (Blade auth) + RBAC
+        if: steps.check.outputs.exists == 'false'
+        working-directory: apps/platform
+        run: |
+          composer require laravel/breeze --dev --no-interaction
+          php artisan breeze:install blade --no-interaction
+          composer require spatie/laravel-permission --no-interaction
+          php artisan vendor:publish --provider="Spatie\Permission\PermissionServiceProvider" --no-interaction
+
+      - name: Commit scaffold back to this branch
+        if: steps.check.outputs.exists == 'false'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/platform
+          git commit -m "Phase 2: Laravel 13 scaffold + Breeze auth + spatie RBAC (generated in CI)"
+          git push origin "HEAD:${GITHUB_REF_NAME}"
