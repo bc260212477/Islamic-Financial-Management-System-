@@ -1,7 +1,7 @@
 import { chromium } from 'playwright';
 import { mkdirSync } from 'node:fs';
 
-const OUT = 'docs/screenshots';
+const OUT = process.env.SCREENSHOT_OUT || '../../docs/screenshots'; // relative to tools/screenshots
 mkdirSync(OUT, { recursive: true });
 const browser = await chromium.launch();
 
