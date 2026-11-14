@@ -10,8 +10,8 @@
 - Laravel platform can use this as its PostgreSQL: `DB_CONNECTION=pgsql`, `DB_HOST=db.lglkzbzudppudyknzudx.supabase.co`, `DB_PORT=5432`, `DB_DATABASE=postgres`, `DB_USERNAME=postgres`, `DB_PASSWORD=<founder-held>` — then `php artisan migrate` on the owner's machine (D-014).
 
 ## Vercel (PARTIAL — one founder action left)
-- Project: **barakah-os** (`prj_7MARcQhZqu6b6258rTYsPUvC6SAh`), root directory set to `apps/web`, env vars set for production/preview/development: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
-- **Deployment blocked (2026-11-14):** Git-source deployments return `429 GitHub API rate limit exceeded` from Vercel's GitHub integration, and linking the repo to the project requires a **GitHub Login Connection** that only the account owner can add: Vercel → avatar → Settings → **Login Connections** → Connect GitHub. After that, redeploy from `main` (or tell the agent "retry Vercel"). GitHub Pages (live now) is unaffected.
+- Project: **barakah-os** (`prj_6hQwMsUEldr9m2BCRPatAMolOl2R` (recreated 2026-11-14 after the empty original was removed during git-link attempts; env vars re-set)), root directory set to `apps/web`, env vars set for production/preview/development: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`.
+- **Deployment blocked (2026-11-14, updated):** the 429 rate limit cleared after the founder added a Login Connection, but repo linking then failed with "you need to install the GitHub integration first" — a Login Connection is NOT the **Vercel GitHub App installation**. Only the owner can install it: Vercel → project **barakah-os** → **Settings → Git → Connect Git Repository** → pick `Islamic-Financial-Management-System-` (root directory is already `apps/web`, env vars already set). After connecting, the next push to `main` auto-deploys; or tell the agent "retry Vercel". GitHub Pages (live now) is unaffected.
 - File-upload deployment was not used: the connector cannot supply `projectSettings` for first deployments, and hand-transcribing `app.js` (44 KB) risks corrupting it.
 
 ## Next wiring slice (not done yet — honestly)
