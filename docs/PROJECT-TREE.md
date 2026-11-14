@@ -30,6 +30,7 @@ Islamic-Financial-Management-System-/
 │       ├── SECURITY.md              # Auth, encryption, privacy, retention
 │       ├── CONTRIBUTING.md          # Branch/PR/test conventions
 │       └── TESTING.md               # Formula/ingestion/API/E2E test plans
+├── docs/04-life-os/DAILY-BREAKDOWN.md  # Life OS D.A.I.L.Y. slices
 ├── skills/                          # Reusable Arena skills (one folder per skill)
 │   ├── financial-calculations/SKILL.md
 │   ├── financial-research/SKILL.md
