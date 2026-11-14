@@ -8,6 +8,9 @@ name: Scaffold Platform (Phase 2, one-time generator)
 
 on:
   workflow_dispatch:
+  push:
+    branches: ['arena/e96af9f7-islamic-financial-management-s']
+    paths: ['.github/workflows/scaffold-platform.yml']
 
 permissions:
   contents: write
