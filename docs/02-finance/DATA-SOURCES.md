@@ -25,3 +25,6 @@ Prefer published files/APIs over HTML scraping. If scraping is unavoidable: rate
 
 ## GitHub-Repos- catalogue
 `bc260212477/GitHub-Repos-` (public, "For Ai research"; category CSVs + `agent_architect.py`; inspected 2026-11-14) is a **discovery catalogue, not a dependency source**. Candidates (orchestration, memory/search, research, security, coding tools) require: license check (MIT/Apache-2.0 preferred), last commit <12 months, dependency/security review, owner approval, DECISIONS.md entry. Core financial logic is always built in-repo.
+
+## Data-mode labels (mandatory, 2026-11-14)
+Every price/KPI/report carries one mode: **Live** (licensed real-time feed — none contracted at launch), **Delayed** (licensed delayed feed), **Historical** (EOD/past), **Manual** (owner typed), **CSV** (owner imported), **Demo** (fictional seed). UI badge + API field `data_mode` + `as_of` are required; a dataset's mode is the *weakest* source it contains. Calling Manual/CSV/Demo data "live" is a release-blocking defect (TESTING.md).

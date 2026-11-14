@@ -1,3 +1,5 @@
+> **STACK SUPERSESSION (2026-11-14):** The Next.js/FastAPI stack in §2 is superseded by **Laravel 13 + PostgreSQL + Blade/Bootstrap 5.3 + Tabler** (DECISIONS D-012, STACK-AUDIT.md). Module, formula, data-honesty and AI-guardrail content remains binding; read stack/API sections through ARCHITECTURE.md + STACK-AUDIT.md. Phases: ROADMAP.md Prompts 0–15.
+
 # BARAKAH — Complete Technical Plan (Arena Master Document)
 
 **Role of this document:** Single technical specification produced by the Technical Planning Architect for the Arena implementation agent. Arena must build from this plan and the companion files listed in §14. Arena must not invent product scope. Where this plan and `BARAKAH-PROJECT.md` conflict, this plan wins for the *platform* and `BARAKAH-PROJECT.md` remains the spec for the already-shipped static v1.0 (see DECISIONS.md D-001).

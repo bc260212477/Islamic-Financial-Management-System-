@@ -1,49 +1,77 @@
-# ROADMAP.md — Phased Build Plan (Copy-Paste Prompts for Arena)
+# ROADMAP.md — Phased Implementation Prompts for Arena (Laravel Platform)
 
-Rule: one phase at a time. Owner tests + approves before the next prompt is used. Status: P0 done; Phase 1 done; **static v1.2–v2.0 completed inside apps/static-v1 (D-011)** pending owner test; platform Phases 2–8 pending owner accounts/keys (Supabase/Vercel/PSX data terms).
-
-## Phase 0 — Planning & Arena files ✅
-Deliverable: TECHNICAL-PLAN.md + SOUL/AGENTS/PROJECT/PRD/ARCHITECTURE/DATABASE/FINANCIAL-RULES/ISLAMIC-FINANCE/DATA-SOURCES/SECURITY/TESTING/ROADMAP/DECISIONS + skills/*/SKILL.md. Acceptance: owner reads TECHNICAL-PLAN §§1–2, 13, 16 and approves stack + D-001/D-008.
-
-## Phase 1 — Static app v1.1 charts (keeps live demo improving)
-```
-Arena: Read BARAKAH-PROJECT.md Prompt v1.1 and AGENTS.md. On the existing static app only (apps/static-v1/index.html|app.js|styles.css), add the Monthly Spend SVG bar chart (trend data in BARAKAH-PROJECT v1.1, current bar gold gradient, dashed gridlines, rounded tops) and the Category Donut (group expenses by category, stroke-dasharray segments, centre = total, top-5 legend) in a 1.1fr/1fr grid below the stat cards. Pure SVG, no libraries, design tokens unchanged. Verify totals equal the expense sum (seed 3055). Do not build v1.2 features. Report test results, keep GitHub Pages deploy green.
-```
-
-## Phase 2 — Platform shell (Next.js + design system)
-```
-Arena: Following TECHNICAL-PLAN §2 and skills/ui-implementation, scaffold apps/web (Next.js 14 + TypeScript) with the Barakah design tokens ported to CSS variables, GlassCard/Btn/Badge/StatCard/KpiRing components, sidebar+topbar shell with placeholder pages (Dashboard, Cash Flow, Businesses, Portfolio, Markets, Calculators, AI, Reports, Settings), responsive to 375px. No backend, use typed mock data clearly marked MOCK. Deploy preview on Vercel. Acceptance: PROJECT.md design rules pass review; no banned libraries.
-```
-
-## Phase 3 — API, database, auth
-```
-Arena: Implement apps/api (FastAPI) with DATABASE.md schema via Alembic on Supabase Postgres (+pgvector), Redis cache, auth per SECURITY.md (decide D-008 first and record it), accounts/transactions CRUD + summary with calculators FIN-01..04, money as strings, audit_log, IDOR + calculator tests from TESTING.md all passing in CI. Seed owner account (registration closed after). No UI wiring beyond a login smoke page.
-```
-
-## Phase 4 — Personal + business finance (cutover)
-```
-Arena: Wire web Dashboard/Cash Flow/Businesses to the API (F1–F3, F10 import/export): transactions CRUD, businesses + P&L (FIN-07), budgets, goals, CSV import (undoable batches) + JSON export, PKR default (D-009). Migrate the v1.0 seed story as demo data. Playwright E2E for add-expense/import must pass. On owner approval, point the public link to the platform (retire Pages demo per D-001) and update README.
-```
-
-## Phase 5 — Market analytics engine (PSX/KMI)
-```
-Arena: Build ingestion per DATA-SOURCES.md (PSX EOD, staged→validated→published, ingestion_runs, stale labelling) for KSE-100/KMI-30/KMI All: index_prices_eod, constituents, prices_eod, sectors. Implement /market endpoints + Markets UI per PRD F5: MarketScope (index→sector→company) driving Wrap cards, KPI rings (FIN-08/09), heatmap (FIN-10), sector donut, movers/gainers/losers, company tabs. Fixture tests (TESTING market engine) must prove sector switching recomputes every widget. Live data only after owner confirms PSX terms (R-01); otherwise ship with labelled fixture/demo dataset.
-```
-
-## Phase 6 — Calculators & Islamic finance
-```
-Arena: Implement F6–F8: zakat/nisab (FIN-11/12 with PKR defaults set with owner), savings goal (FIN-14), profit (FIN-15), FX display (FIN-16); screener (ISLAMIC-FINANCE thresholds, stars, FIN-13 purification on dividends) applied to holdings + company pages; Islamic banks reference panel with footnote. Calculator unit tests (TESTING) verbatim from FINANCIAL-RULES worked examples.
-```
-
-## Phase 7 — AI assistant
-```
-Arena: Implement F9 per ARCHITECTURE AI pipeline: intent→SQL/pgvector retrieval (user-scoped facts), cited streaming answers, number verifier (block/regenerate), refusal rules (trading/fatwa/guarantees), conversations+audit stored, disclaimer UI. Mock-LLM guardrail tests pass; owner evaluates 20 real questions against their data before enabling by default.
-```
-
-## Phase 8 — Reports, hardening, launch
-```
-Arena: F10 reports (monthly/quarterly/yearly, PDF/CSV), full export + hard delete, security checklist (skills/security-review) + dependency audit, performance (cached market pages <2s), optional dark mode, backup/restore drill, README + DECISIONS updated, production deploy (Vercel + Render/Railway + Supabase), uptime check on /health. Launch gate = TESTING release gate all green + owner sign-off.
-```
+Delivery protocol (binding): one phase per prompt. Each prompt is self-contained: Goal / Prerequisites / Files / Acceptance / Demo / Stop. Arena executes, reports evidence, and **stops** for owner approval. Stack: STACK-AUDIT.md (Laravel 13, PostgreSQL, Blade+Bootstrap 5.3+Tabler). Prototype `apps/static-v1` = design reference only (D-013). PHP verification via GitHub Actions (D-014).
+Status: **Phase 0 ✅ · Phase 1 ✅** · Phases 2–15 pending.
 
 ---
-Backlog (not in any phase without a DECISIONS entry): real-time data, broker integrations, mobile apps, multi-user billing, crypto, Supabase/Vercel connector automations in-chat.
+
+### Prompt 0 — Repo & stack audit ✅
+Goal: audit repo + stack versions. Done: docs/01-architecture/STACK-AUDIT.md (Laravel 13 decision, Tabler selected, sandbox PHP constraint D-014).
+
+### Prompt 1 — Agent Operating System files ✅
+Goal: full `docs/` file set + 8 skills, no code. Done: PROJECT/PRD (+F12–F15), ARCHITECTURE, DATABASE, FINANCIAL-RULES (FIN-01…21 incl. health score), ISLAMIC-FINANCE, DATA-SOURCES (+data-modes), SECURITY (+Laravel map), UI-DESIGN, TESTING, ROADMAP, DECISIONS (D-012…15), CONTRIBUTING, skills incl. kpi-computation.
+
+### Prompt 2 — Laravel skeleton, migrations, auth, RBAC
+Goal: runnable Laravel 13 app in `apps/platform` with auth + tenant isolation.
+Prerequisites: Phase 1 approved; PHP 8.3+/Composer via CI or owner machine (D-014).
+Files: `apps/platform/**` (composer create-project laravel/laravel:^13), `.env.example`, migrations for users/roles/accounts/categories (DATABASE.md), auth (Breeze Blade), tenant global scope, CI workflow `ci.yml` (setup-php 8.3, Postgres service, Pint, PHPUnit).
+Acceptance: CI green: app boots, migrations run on Postgres, register/login/logout works, user B cannot see user A's rows (test), demo seeder data labelled FICTIONAL.
+Demo: owner runs CI link / local `php artisan serve` screenshot of login + empty dashboard.
+Stop: report CI run URL; wait for approval.
+
+### Prompt 3 — Personal finance core
+Goal: accounts, transactions, categories, transfers (FIN-21), recurring rules.
+Prereq: P2. Files: models/controllers/Blade for accounts & transactions, transfer pairing, category CRUD, import of prototype categories.
+Acceptance: formula tests FIN-02/03/21; transfer-neutrality test; CRUD E2E in CI (feature tests). Demo: add account + salary + expense; balance matches hand calc. Stop.
+
+### Prompt 4 — Cash flow, net worth, reports
+Goal: dashboard net worth (FIN-01), cash-flow breakdown, monthly/quarterly/yearly reports, savings rate/burn/runway (FIN-20).
+Prereq: P3. Acceptance: report totals reconcile to transactions (test); dashboard = UI-DESIGN tokens. Demo: seed month, compare PDF-less HTML report to hand totals. Stop.
+
+### Prompt 5 — Business finance
+Goal: businesses/branches, business accounts, P&L (FIN-07), receivables/payables, owner withdrawals as transfers.
+Prereq: P4. Acceptance: personal vs business separation test (no cross-contamination), P&L fixture test. Demo: two businesses, P&L each + consolidated labelled. Stop.
+
+### Prompt 6 — Savings & goals
+Goal: goals, emergency fund, contributions, projections (FIN-14/18).
+Prereq: P4. Acceptance: goal-math tests incl. assumed-profit labelling. Demo: create house goal, projection date matches formula. Stop.
+
+### Prompt 7 — Investments (manual + CSV first)
+Goal: holdings, transactions, cost basis, valuation (manual price + CSV), dividends/sukuk profit, allocation (FIN-05/06), data-mode badges.
+Prereq: P3. Acceptance: return/allocation tests; CSV import skips+reports bad rows; no price ever labelled Live. Demo: import prototype holdings CSV, portfolio totals match static demo. Stop.
+
+### Prompt 8 — PSX / sector intelligence engine
+Goal: Market→PSX→Index→Sector→Company drill-down; **every** component (KpiRings, donut, heatmap, movers, rankings, company tabs) recomputes from the filtered sector dataset via shared components (skills/market-analysis + kpi-computation).
+Prereq: P7; PSX data-terms check (R-01) — else ship Manual/CSV mode only, honestly labelled.
+Acceptance: fixture test — two sectors produce different, hand-verified KPI sets; scope switch updates all widgets (feature test). Demo: owner switches Energy vs Banks, screenshots differ everywhere. Stop.
+
+### Prompt 9 — Islamic finance
+Goal: zakat (FIN-11/12, Hanafi default shown), screening per holding/company (ISLAMIC-FINANCE), purification (FIN-13), Islamic banks reference.
+Prereq: P7. Acceptance: worked-example tests verbatim; no auto-certification copy. Demo: zakat $515-equivalent PKR example + one purify holding. Stop.
+
+### Prompt 10 — Calculators
+Goal: suite per F14, each with formula + assumptions displayed, riba vs Islamic distinguished.
+Prereq: P4. Acceptance: unit test per calculator vs known case. Demo: CAGR + loan-vs-profit-sharing comparison screenshot. Stop.
+
+### Prompt 11 — Financial health score
+Goal: FIN-19 score ring + indicator drill-down, trend, warnings.
+Prereq: P4+P6. Acceptance: score reproducible from fixture; <3 indicators → "insufficient data". Demo: seeded user score breakdown matches hand calc. Stop.
+
+### Prompt 12 — AI assistant
+Goal: chat over user's own data (RAG/tools), citations on every number, refusal rules (no trades, no fatwa, no invented data), privacy controls + usage limits (PRD F9).
+Prereq: P4, P8 data present; LLM key in env (owner). Acceptance: mock-LLM tests — planted wrong number blocked; missing data → "I don't have that data". Demo: owner asks 10 questions, verifies citations. Stop.
+
+### Prompt 13 — Reports & export
+Goal: PDF/CSV reports, full data export/delete (SECURITY).
+Prereq: P4. Acceptance: export round-trip test; PDF totals = HTML totals. Demo: download monthly PDF. Stop.
+
+### Prompt 14 — UI polish, dark mode, RTL/Urdu
+Goal: UI-DESIGN full pass, dark mode, `lang/ur` + RTL layout, responsive QA.
+Prereq: P13. Acceptance: 375px smoke, RTL screenshot, contrast checks. Demo: owner toggles Urdu/RTL + dark. Stop.
+
+### Prompt 15 — Security audit, full tests, deployment
+Goal: SECURITY checklist + skills/security-review signed off, full suite green, backups, production deploy.
+Prereq: P14. Acceptance: TESTING release gate; `composer audit` clean or ADR exceptions; deploy runbook in README. Demo: live production URL + test report. Stop — launch decision is owner's.
+
+---
+Backlog (ADR required): real-time licensed PSX feed, broker integration, mobile apps, billing.

@@ -29,3 +29,6 @@ Rotate JWT secret + DB password, revoke sessions, notify owner, preserve audit_l
 
 ## Checklist (per PR touching auth/money/upload/AI)
 skills/security-review/SKILL.md must be run and its result pasted in the PR.
+
+## Laravel enforcement map (2026-11-14)
+Blade `{{ }}` escaping (no `{!! !!}` on user data), `@csrf` on all forms, Eloquent parameter binding only (no raw SQL with input; reviewed `DB::raw` exceptions logged), Form Request validation, Breeze/Fortify-grade auth with hashed (bcrypt/argon2id) passwords, session regeneration on login, rate limiting (`RateLimiter`) on auth/AI/imports, policies per tenant-owned model + tenant scope tests, `APP_DEBUG=false` in production, secrets in `.env` (never committed), signed download URLs for exports, `composer audit` + `npm audit` in CI.

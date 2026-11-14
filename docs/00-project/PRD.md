@@ -37,3 +37,10 @@ Register/login (single-user mode flag), JWT sessions, password reset via email i
 
 ## Non-functional
 Responsive 375px→desktop; page data loads <2s cached; no console errors; accessible labels/focus; all list money totals reconciled to detail rows by automated test (TESTING.md).
+
+## Additions (2026-11-14 master directive)
+- **F12 Financial Health Score** (FIN-19): circular overall score, per-indicator drill-down rings, trend, warnings, recommendations; indicators without data show "insufficient data", never guessed.
+- **F13 Recurring & obligations:** recurring transactions (weekly/monthly/yearly), upcoming obligations view feeding cash-flow forecast (FIN-20 burn/runway).
+- **F14 Calculators suite:** compound growth, savings, ROI, CAGR, inflation, loan (riba warning + Islamic alternative side-by-side), debt payoff, retirement, emergency fund, dividend income, currency, profit margin, break-even — each shows formula + assumptions (skills/kpi-computation).
+- **F15 Language:** English primary; Urdu secondary + RTL in Phase 14; all strings translatable from first Blade view.
+- **Data honesty:** every market/portfolio figure displays data-mode + as_of (DATA-SOURCES.md). Demo seed data labelled FICTIONAL.
