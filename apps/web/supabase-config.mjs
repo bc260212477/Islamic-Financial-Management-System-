@@ -1,4 +1,4 @@
-// Barakah OS — public Supabase client config.
+// Barakah — public Supabase client config.
 // ONLY the publishable (anon) key belongs here: it is safe to ship to browsers
 // because Row Level Security (see supabase/migrations) protects every table.
 // NEVER put the service_role / secret key or the database password in this repo.

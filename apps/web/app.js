@@ -1,7 +1,7 @@
 import { zakat, purification, screenStock, ribaCheck, debtPayoff, goalMonthly, inflate, taxEstimatorPK, healthScore } from './formulas.mjs';
 import { SUPABASE } from './supabase-config.mjs';
 
-/* Barakah OS — web SaaS front-end.
+/* Barakah — web SaaS front-end.
    Data: per-user, browser-local (localStorage). Demo seed is FICTIONAL and labelled DEMO.
    Production backend: Laravel platform in apps/platform (same features/formulas, PostgreSQL). */
 const $ = s => document.querySelector(s);
@@ -35,9 +35,10 @@ function seed() {
     goals: [ { id: id(), name: 'Hajj Fund', target: 1800000, saved: 640000 }, { id: id(), name: 'Emergency Fund', target: 900000, saved: 517000 }, { id: id(), name: 'Child Education', target: 2500000, saved: 310000 } ],
     businesses: [ { id: id(), name: 'Barakah Design Studio', revenue: 420000, expenses: 265000 } ],
     holdings: [
-      { id: id(), symbol: 'OGDC', qty: 1200, price: 268, cost: 231 },
-      { id: id(), symbol: 'MARI', qty: 150, price: 2840, cost: 2450 },
-      { id: id(), symbol: 'MEBL', qty: 2000, price: 391, cost: 342 },
+      { id: id(), symbol: 'OGDC', qty: 1200, price: 268, cost: 231, platform: 'Ktrade', term: 'Long-term', ret: 14, pays: 4 },
+      { id: id(), symbol: 'MARI', qty: 150, price: 2840, cost: 2450, platform: 'Ktrade', term: 'Long-term', ret: 12, pays: 2 },
+      { id: id(), symbol: 'MEBL', qty: 2000, price: 391, cost: 342, platform: 'Ktrade', term: 'Medium-term', ret: 11, pays: 4 },
+      { id: id(), symbol: 'Meezan Cash Fund', qty: 5000, price: 112, cost: 108, platform: 'Meezan', term: 'Monthly-term', ret: 17, pays: 12 },
     ],
     family: [ { id: id(), name: 'Amina (Spouse)', relation: 'Spouse' }, { id: id(), name: 'Yusuf (Son)', relation: 'Child' } ],
     habits: [
@@ -55,11 +56,16 @@ function seed() {
     skills: [ { id: id(), name: 'Arabic', level: 35 }, { id: id(), name: 'Financial modelling', level: 68 } ],
     health: [ { id: id(), date: today(), metric: 'Steps', value: 8200 }, { id: id(), date: today(), metric: 'Sleep (h)', value: 6.8 } ],
     qard: [ { id: id(), person: 'Bilal (brother)', amount: 50000, due: '' } ],
+    allocation: { salary: 650000, buckets: [
+      { name: 'Essential Expenses', pct: 40 }, { name: 'Emergency Fund', pct: 10 },
+      { name: 'Stocks / Investments', pct: 15 }, { name: 'Sadaqah', pct: 2.5 },
+      { name: 'Family Fund', pct: 10 }, { name: 'Savings / Goals', pct: 10 },
+      { name: 'Fun Money', pct: 5 }, { name: 'Debt Repayment', pct: 5 }, { name: 'Buffer', pct: 2.5 } ] },
     plan: 'Free',
   };
 }
 let S;
-function load() { const raw = localStorage.getItem(key()); S = raw ? JSON.parse(raw) : seed(); save(); }
+function load() { const raw = localStorage.getItem(key()); S = raw ? JSON.parse(raw) : seed(); if (!S.allocation) S.allocation = seed().allocation; S.holdings.forEach(h => { h.platform = h.platform || 'Ktrade'; h.term = h.term || 'Long-term'; h.ret = h.ret ?? 12; h.pays = h.pays ?? 4; }); save(); }
 function save() { localStorage.setItem(key(), JSON.stringify(S)); }
 
 /* ---------- market: FICTIONAL demo feed, always labelled DEMO ---------- */
@@ -101,12 +107,12 @@ function ring(score) {
 /* ---------- navigation ---------- */
 const NAV = [
   ['Overview', [['dashboard', '🏠 Dashboard']]],
-  ['Money OS', [['accounts', '🏦 Accounts'], ['transactions', '⇄ Transactions'], ['budgets', '🎯 Budgets'], ['goals', '🌙 Goals'], ['cashflow', '🌊 Cash Flow']]],
-  ['Business OS', [['businesses', '🏢 Businesses']]],
+  ['Money — In & Out', [['accounts', '🏦 Accounts'], ['transactions', '⇄ Transactions'], ['budgets', '🎯 Budgets'], ['allocation', '％ Salary Allocation'], ['goals', '🌙 Goals'], ['cashflow', '🌊 Cash Flow']]],
+  ['Business & Partnerships', [['businesses', '🏢 Businesses']]],
   ['Investments', [['holdings', '📈 Holdings'], ['market', '🇵🇰 PSX Market']]],
   ['Tools', [['tools', '🧰 All Tools'], ['islamic', '☪️ Islamic Finance']]],
-  ['Life OS', [['family', '👨‍👩‍👧 Family'], ['habits', '🔥 Habits'], ['tasks', '✅ Tasks & Routine'], ['growth', '📚 Learning & Growth'], ['health', '❤️ Health'], ['legacy', '🕋 Legacy & Community']]],
-  ['Intelligence', [['assistant', '🤖 Decision OS (AI)'], ['reports', '📄 Reports']]],
+  ['Family & Life', [['family', '👨‍👩‍👧 Family'], ['habits', '🔥 Habits'], ['tasks', '✅ Tasks & Routine'], ['growth', '📚 Learning & Growth'], ['health', '❤️ Health'], ['legacy', '🕋 Legacy & Community']]],
+  ['Intelligence', [['assistant', '🤖 AI Assistant'], ['reports', '📄 Reports']]],
   ['SaaS', [['settings', '⚙️ Workspace & Plans']]],
 ];
 let route = 'dashboard', activeTool = null;
@@ -114,7 +120,7 @@ let route = 'dashboard', activeTool = null;
 function renderAuth() {
   $('#app-view').hidden = true; $('#auth-view').hidden = false;
   $('#auth-view').innerHTML = `<div class="authwrap"><div class="card goldtop authcard">
-    <div class="serif" style="font-size:2rem;color:var(--green)">Barakah <b style="color:var(--gold)">OS</b></div>
+    <div class="serif" style="font-size:2rem;color:var(--green)">Barakah</div>
     <p style="color:var(--muted)">Live deliberately. Grow barakah. — Money, business, family, habits, learning, health &amp; Islamic finance in one SaaS.</p>
     <div class="banner"><b>Demo workspace.</b> Browser-local data; demo figures are FICTIONAL ${tag('DEMO')} Production sign-in is the Laravel platform.</div>
     <form id="login-form"><label>Email<input name="email" type="email" required value="demo@barakah.local"></label>
@@ -123,7 +129,7 @@ function renderAuth() {
     <button class="btn gold" id="demo-btn" style="width:100%;margin-top:.6rem">▶ One-click demo login</button>
     <form id="reg-form" style="margin-top:1.2rem"><label>New here? Register — Name<input name="name" required></label><label>Email<input name="email" type="email" required></label><label>Password<input name="password" type="password" required></label><button class="btn ghost" style="width:100%">Create free workspace</button></form>
   </div></div>`;
-  const signIn = email => { session = { email, name: email.split('@')[0] }; localStorage.setItem('barakah:session', JSON.stringify(session)); load(); renderApp(); toast('Assalamu alaikum — welcome to Barakah OS'); };
+  const signIn = email => { session = { email, name: email.split('@')[0] }; localStorage.setItem('barakah:session', JSON.stringify(session)); load(); renderApp(); toast('Assalamu alaikum — welcome to Barakah'); };
   $('#login-form').onsubmit = e => { e.preventDefault(); signIn(new FormData(e.target).get('email')); };
   $('#demo-btn').onclick = () => signIn('demo@barakah.local');
   $('#reg-form').onsubmit = e => { e.preventDefault(); signIn(new FormData(e.target).get('email')); };
@@ -131,12 +137,12 @@ function renderAuth() {
 
 function renderApp() {
   $('#auth-view').hidden = true; $('#app-view').hidden = false;
-  $('#sidebar').innerHTML = `<div class="brand">Barakah <b>OS</b><br><span style="font-size:.72rem;color:#9FBFA8">Live deliberately. Grow barakah.</span></div>` +
+  $('#sidebar').innerHTML = `<div class="brand">Barakah<br><span style="font-size:.72rem;color:#9FBFA8">Live deliberately. Grow barakah.</span></div>` +
     NAV.map(([g, items]) => `<h4>${g}</h4><nav>${items.map(([r, l]) => `<button data-route="${r}" class="${route === r ? 'active' : ''}"><span>${l.split(' ')[0]}</span><span class="lbl">${l.slice(l.indexOf(' ') + 1)}</span></button>`).join('')}</nav>`).join('') +
     `<div style="margin-top:1rem" class="lbl"><button class="btn gold small" id="logout">Sign out (${esc(session.name)})</button></div>`;
   document.querySelectorAll('[data-route]').forEach(b => b.onclick = () => { route = b.dataset.route; activeTool = null; renderApp(); });
   $('#logout').onclick = () => { session = null; localStorage.removeItem('barakah:session'); renderAuth(); };
-  $('#topbar').innerHTML = `<div><b class="serif" style="font-size:1.25rem">${NAV.flatMap(x => x[1]).find(x => x[0] === route)?.[1] || 'Barakah OS'}</b> <span class="tag demo">DEMO DATA</span></div>
+  $('#topbar').innerHTML = `<div><b class="serif" style="font-size:1.25rem">${NAV.flatMap(x => x[1]).find(x => x[0] === route)?.[1] || 'Barakah'}</b> <span class="tag demo">DEMO DATA</span></div>
     <div><a class="btn gold small" href="components.html">🧩 Design Preview</a> <button class="btn ghost small" id="dark">🌙 Dark</button> <button class="btn small" id="quick-add">+ Add transaction</button></div>`;
   $('#dark').onclick = () => document.body.classList.toggle('dark');
   $('#quick-add').onclick = openTxnModal;
@@ -153,6 +159,10 @@ const inp = (name, label, type = 'text', extra = '') => `<label>${label}<input n
 const delBtn = (kind, idv) => `<button class="btn danger small" data-del="${kind}:${idv}">Delete</button>`;
 function bindDel(kind, rerender) { document.querySelectorAll(`[data-del^="${kind}:"]`).forEach(b => b.onclick = () => { const i = b.dataset.del.split(':')[1]; const ix = S[kind].findIndex(x => x.id === i); const [removed] = S[kind].splice(ix, 1); save(); rerender(); toast('Deleted', { label: 'Undo', fn: () => { S[kind].splice(ix, 0, removed); save(); rerender(); } }); }); }
 
+const EXPENSE_CATS = ['Food — Fruits','Food — Vegetables','Food — Dry Fruits','Food — Meat','Food — Dairy','Food — Staples','Food — Dining Out','Food — Delivery','Bills — Electricity','Bills — Gas','Bills — Water','Bills — Internet','Bills — Mobile','Subscriptions','Transport — Fuel','Transport — Ride (Careem/InDrive)','Transport — Maintenance','Health — Doctor','Health — Medicines','Health — Lab/Hospital','Education — School Fee','Education — College Fee','Education — Books/Stationery','Education — Tuition','Family — Allowance','Family — Pocket Money','Family — Gifts','Family — Kids Clothes/Toys','Personal — Clothes','Personal — Salon/Care','Home — Rent','Home — Maintenance','Home — Furniture/Appliances','Events — Eid','Events — Wedding','Events — Umrah/Hajj','Events — Birthday','Charity — Sadaqah','Charity — Foundation Payout','Loan Repayment','Taxes — FBR','Vehicle — Fuel','Vehicle — Insurance','Misc'];
+const INCOME_TYPES = ['Salary','Freelance','Business Profit','Partnership — School/Academy','Partnership — College/University','Partnership — Company/Factory','Rental — House/Shop','Rental — Land','Rental — Car/Bus/Truck','Dividend (Stock)','Fund Profit (Meezan/Faysal)','Sukuk Profit','Bonus/Commission','Gift','Other Income'];
+function kpiCircle(label, pct, sub) { const v = Math.max(0, Math.min(100, Math.round(pct || 0))); const c = 2 * Math.PI * 34; return `<div style="text-align:center"><svg width="86" height="86" viewBox="0 0 86 86"><circle cx="43" cy="43" r="34" fill="none" stroke="#EFE6D2" stroke-width="9"/><circle cx="43" cy="43" r="34" fill="none" stroke="var(--gold)" stroke-width="9" stroke-linecap="round" stroke-dasharray="${c}" stroke-dashoffset="${c * (1 - v / 100)}" transform="rotate(-90 43 43)" style="transition:stroke-dashoffset 800ms var(--ease-out-expo)"/><text x="43" y="48" text-anchor="middle" font-weight="700" font-size="15" fill="#14532D">${v}%</text></svg><div><b>${label}</b><br><span style="color:var(--muted);font-size:.75rem">${sub}</span></div></div>`; }
+
 /* ---------- views ---------- */
 const VIEWS = {
   dashboard() {
@@ -164,7 +174,8 @@ const VIEWS = {
       <p>Habits today: <b>${d.habitPct}%</b> · Overdue tasks: <b>${d.overdue.length}</b> · Zakat due (est.): <b>${fmt(d.zakat.due)}</b></p></div>
       <div class="card" style="text-align:center"><h3>Financial Health Score</h3>${ring(d.health.score)}<p style="color:var(--muted)">${d.health.score == null ? d.health.note : 'Composite of savings, emergency fund, zakat readiness & habits (FIN-19).'}</p>
       <button class="btn" onclick="document.querySelector('[data-route=assistant]').click()">🤖 What should I fix today?</button></div></div>
-      <div class="card" style="margin-top:1rem"><h3>12 Pillars — status</h3><div class="grid g3">${[['💰 Money', fmt(d.netWorth) + ' net worth'], ['🏢 Business', fmt(d.bizProfit) + ' profit'], ['👨‍👩‍👧 Family', S.family.length + ' members'], ['🔥 Habits', d.habitPct + '% today'], ['✅ Tasks', S.tasks.filter(t => t.status !== 'done').length + ' open'], ['📚 Growth', S.skills.length + ' skills tracked'], ['❤️ Health', S.health.length + ' logs'], ['☪️ Islamic', 'Zakat ' + fmt(d.zakat.due)], ['🤖 Decision OS', 'Ask me anything →']].map(([a, b]) => `<div><b>${a}</b><br><span style="color:var(--muted)">${b}</span></div>`).join('')}</div></div>`);
+      <div class="card" style="margin-top:1rem"><h3>KPI Circles — StockIntel style (of income / net worth)</h3><div class="grid g4">${kpiCircle('Savings Rate', d.savingsRate, fmt(d.net) + ' kept')}${kpiCircle('Expense Ratio', 100 - d.savingsRate, fmt(d.expense) + ' spent')}${kpiCircle('Investment Ratio', d.netWorth ? d.invValue / d.netWorth * 100 : 0, fmt(d.invValue) + ' invested')}${kpiCircle('Emergency Cover', d.expense ? Math.min(100, (d.netWorth - d.invValue) / d.expense / 6 * 100) : 0, 'of 6-month target')}</div></div>
+      <div class="card" style="margin-top:1rem"><h3>Modules — status</h3><div class="grid g3">${[['💰 Money', fmt(d.netWorth) + ' net worth'], ['🏢 Business', fmt(d.bizProfit) + ' profit'], ['👨‍👩‍👧 Family', S.family.length + ' members'], ['🔥 Habits', d.habitPct + '% today'], ['✅ Tasks', S.tasks.filter(t => t.status !== 'done').length + ' open'], ['📚 Growth', S.skills.length + ' skills tracked'], ['❤️ Health', S.health.length + ' logs'], ['☪️ Islamic', 'Zakat ' + fmt(d.zakat.due)], ['🤖 AI Assistant', 'Ask me anything →']].map(([a, b]) => `<div><b>${a}</b><br><span style="color:var(--muted)">${b}</span></div>`).join('')}</div></div>`);
   },
   accounts() {
     view(`<div class="card"><h3>Accounts ${tag('MANUAL')}</h3><table><tr><th>Name</th><th>Type</th><th>Balance</th><th></th></tr>${S.accounts.map(a => `<tr><td>${esc(a.name)}</td><td>${esc(a.type)}</td><td class="serif"><b>${fmt(a.balance)}</b></td><td>${delBtn('accounts', a.id)}</td></tr>`).join('')}</table>
@@ -176,10 +187,10 @@ const VIEWS = {
     const d = derived();
     view(`<div class="grid g3">${[['Income', fmt(d.income)], ['Expenses', fmt(d.expense)], ['Net', fmt(d.net)]].map(([l, v]) => `<div class="card goldtop kpi"><div class="label">${l}</div><div class="num">${v}</div></div>`).join('')}</div>
     <div class="card" style="margin-top:1rem"><h3>Transactions ${tag('MANUAL')}</h3>
-    ${form('f', inp('desc', 'Description') + inp('cat', 'Category') + `<label>Type<select name="type"><option>income</option><option>expense</option><option>transfer</option></select></label>` + inp('amount', 'Amount', 'number', 'step="any" required'), 'Add')}
-    <table><tr><th>Date</th><th>Description</th><th>Category</th><th>Type</th><th>Amount</th><th></th></tr>${S.transactions.map(t => `<tr><td>${t.date}</td><td>${esc(t.desc)}</td><td>${esc(t.cat)}</td><td>${t.type}</td><td class="serif"><b>${fmt(t.amount)}</b></td><td>${delBtn('transactions', t.id)}</td></tr>`).join('')}</table>
-    <p style="color:var(--muted);font-size:.85rem">Transfers are excluded from income/expenses (FIN-21). Family expenses added in Family OS appear here too.</p></div>`);
-    $('#f').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); S.transactions.unshift({ id: id(), date: today(), desc: f.get('desc'), cat: f.get('cat'), type: f.get('type'), amount: +f.get('amount') }); save(); VIEWS.transactions(); };
+    ${form('f', inp('desc', 'Description') + `<label>Category<input name="cat" list="cats" placeholder="Food — Fruits"></label><datalist id="cats">${[...EXPENSE_CATS, ...INCOME_TYPES].map(c => `<option value="${c}">`).join('')}</datalist>` + `<label>Type<select name="type"><option>income</option><option>expense</option><option>transfer</option></select></label>` + `<label>For / Paid by<select name="member"><option>Self</option>${S.family.map(m => `<option>${esc(m.name)}</option>`).join('')}</select></label>` + `<label>Repeat<select name="rec"><option>One-time</option><option>Monthly</option><option>Quarterly</option><option>1-2x per year</option><option>Yearly</option></select></label>` + inp('amount', 'Amount', 'number', 'step="any" required'), 'Add')}
+    <table><tr><th>Date</th><th>Description</th><th>Category</th><th>For</th><th>Type</th><th>Amount</th><th></th></tr>${S.transactions.map(t => `<tr><td>${t.date}</td><td>${esc(t.desc)}</td><td>${esc(t.cat)}${t.rec && t.rec !== 'One-time' ? ' ↻ ' + esc(t.rec) : ''}</td><td>${esc(t.member || 'Self')}</td><td>${t.type}</td><td class="serif"><b>${fmt(t.amount)}</b></td><td>${delBtn('transactions', t.id)}</td></tr>`).join('')}</table>
+    <p style="color:var(--muted);font-size:.85rem">Transfers are excluded from income/expenses (FIN-21). Family expenses added in Family appear here too.</p></div>`);
+    $('#f').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); S.transactions.unshift({ id: id(), date: today(), desc: f.get('desc'), cat: f.get('cat'), type: f.get('type'), member: f.get('member'), rec: f.get('rec'), amount: +f.get('amount') }); save(); VIEWS.transactions(); };
     bindDel('transactions', VIEWS.transactions);
   },
   budgets() {
@@ -194,12 +205,33 @@ const VIEWS = {
     document.querySelectorAll('[data-goal]').forEach(f => f.onsubmit = e => { e.preventDefault(); const g = S.goals.find(x => x.id === f.dataset.goal); g.saved += +new FormData(f).get('add') || 0; save(); VIEWS.goals(); });
     bindDel('goals', VIEWS.goals);
   },
+  allocation() {
+    const a = S.allocation; const d = derived();
+    const salary = +a.salary || d.income || 0;
+    const total = a.buckets.reduce((x, b) => x + (+b.pct || 0), 0);
+    const colors = ['#14532D','#C6A34F','#2D6A4F','#B8902E','#3A6EA5','#8A8274','#6D28D9','#B23A2D','#4A443A'];
+    const C = 2 * Math.PI * 52; let acc = 0;
+    const segs = a.buckets.map((b, i) => { const frac = (+b.pct || 0) / 100; const s = `<circle cx="70" cy="70" r="52" fill="none" stroke="${colors[i % colors.length]}" stroke-width="20" stroke-dasharray="${frac * C} ${C}" stroke-dashoffset="${-acc * C}" transform="rotate(-90 70 70)"/>`; acc += frac; return s; }).join('');
+    view(`<div class="grid g2"><div class="card goldtop"><h3>％ Salary Allocation — every rupee has a job</h3>
+    ${form('fsal', inp('salary', 'Monthly salary (PKR)', 'number', 'value="' + salary + '" required'), 'Set salary')}
+    <p>Total allocated: <b style="color:${total === 100 ? 'var(--success)' : 'var(--danger)'}">${total}%</b> ${total === 100 ? '✅ Exactly 100% — plan is valid.' : '⚠️ Must total exactly 100% before this plan counts.'}</p>
+    <table><tr><th>Bucket</th><th>%</th><th>PKR / month</th><th>Spent (same-named category)</th><th></th></tr>
+    ${a.buckets.map((b, i) => { const spent = S.transactions.filter(t => t.type === 'expense' && t.cat === b.name).reduce((x, t) => x + +t.amount, 0); return `<tr><td>${esc(b.name)}</td><td><input type="number" step="any" value="${b.pct}" data-bpct="${i}" style="width:80px;margin:0"></td><td class="serif"><b>${fmt(salary * b.pct / 100)}</b></td><td>${fmt(spent)}</td><td><button class="btn danger small" data-bdel="${i}">Delete</button></td></tr>`; }).join('')}</table>
+    ${form('fb', inp('name', 'New bucket name') + inp('pct', '%', 'number', 'step="any" required'), 'Add bucket')}
+    <p style="color:var(--muted);font-size:.85rem">Tip: name a bucket exactly like an expense category (e.g. “Subscriptions”) and actual spending shows against the plan automatically.</p></div>
+    <div class="card" style="text-align:center"><h3>Where the salary goes</h3><svg width="150" height="150" viewBox="0 0 140 140">${segs}<text x="70" y="66" text-anchor="middle" font-size="11" fill="#8A8274">SALARY</text><text x="70" y="82" text-anchor="middle" font-weight="700" font-size="12">${fmt(salary)}</text></svg>
+    <div style="text-align:left">${a.buckets.map((b, i) => `<p style="margin:.25rem 0"><span style="color:${colors[i % colors.length]}">●</span> ${esc(b.name)} — ${b.pct}% · ${fmt(salary * b.pct / 100)}</p>`).join('')}</div></div></div>`);
+    $('#fsal').onsubmit = e => { e.preventDefault(); a.salary = +new FormData(e.target).get('salary'); save(); VIEWS.allocation(); };
+    document.querySelectorAll('[data-bpct]').forEach(inp2 => inp2.onchange = () => { a.buckets[+inp2.dataset.bpct].pct = +inp2.value || 0; save(); VIEWS.allocation(); });
+    document.querySelectorAll('[data-bdel]').forEach(b2 => b2.onclick = () => { a.buckets.splice(+b2.dataset.bdel, 1); save(); VIEWS.allocation(); });
+    $('#fb').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); a.buckets.push({ name: f.get('name'), pct: +f.get('pct') }); save(); VIEWS.allocation(); };
+  },
   cashflow() {
     const d = derived();
     const cats = {}; S.transactions.filter(t => t.type === 'expense').forEach(t => cats[t.cat] = (cats[t.cat] || 0) + +t.amount);
     view(`<div class="card"><h3>Cash Flow Statement ${tag('MANUAL')}</h3>${barChart(Object.entries(cats).map(([l, v]) => ({ l: l.slice(0, 8), v, c: '#C6A34F' })))}
     <table><tr><th></th><th>Amount</th></tr><tr><td>Total income</td><td>${fmt(d.income)}</td></tr><tr><td>Total expenses</td><td>${fmt(d.expense)}</td></tr><tr><td><b>Net cash flow</b></td><td><b>${fmt(d.net)}</b></td></tr><tr><td>Savings rate</td><td>${d.savingsRate}%</td></tr></table></div>
-    <div class="card" style="margin-top:1rem"><h3>Forecast (simple, from current net)</h3><p>At ${fmt(d.net)}/period: 3 periods ≈ <b>${fmt(d.net * 3)}</b>, 6 periods ≈ <b>${fmt(d.net * 6)}</b>. ${d.net < 0 ? '⚠️ Negative — Decision OS recommends cutting the largest category above.' : 'On track — route surplus to goals before lifestyle creep.'}</p></div>`);
+    <div class="card" style="margin-top:1rem"><h3>Forecast (simple, from current net)</h3><p>At ${fmt(d.net)}/period: 3 periods ≈ <b>${fmt(d.net * 3)}</b>, 6 periods ≈ <b>${fmt(d.net * 6)}</b>. ${d.net < 0 ? '⚠️ Negative — AI Assistant recommends cutting the largest category above.' : 'On track — route surplus to goals before lifestyle creep.'}</p></div>`);
   },
   businesses() {
     view(`<div class="card"><h3>Businesses — kept separate from personal (entity principle)</h3><table><tr><th>Name</th><th>Revenue</th><th>Expenses</th><th>Profit → net worth</th><th></th></tr>${S.businesses.map(b => `<tr><td>${esc(b.name)}</td><td>${fmt(b.revenue)}</td><td>${fmt(b.expenses)}</td><td class="serif"><b>${fmt(+b.revenue - +b.expenses)}</b></td><td>${delBtn('businesses', b.id)}</td></tr>`).join('')}</table>
@@ -209,9 +241,16 @@ const VIEWS = {
   },
   holdings() {
     const d = derived();
-    view(`<div class="card"><h3>Holdings ${tag('MANUAL')}</h3><table><tr><th>Symbol</th><th>Qty</th><th>Price</th><th>Value</th><th>Gain/Loss</th><th></th></tr>${S.holdings.map(h => `<tr><td><b>${esc(h.symbol)}</b></td><td>${h.qty}</td><td>${fmt(h.price)}</td><td>${fmt(h.qty * h.price)}</td><td>${fmt(h.qty * (h.price - h.cost))}</td><td>${delBtn('holdings', h.id)}</td></tr>`).join('')}</table>
-    <p>Portfolio: <b>${fmt(d.invValue)}</b> · P/L <b>${fmt(d.invGain)}</b></p>${form('f', inp('symbol', 'Symbol') + inp('qty', 'Qty', 'number') + inp('price', 'Price', 'number', 'step="any"') + inp('cost', 'Avg cost', 'number', 'step="any"'), 'Add holding')}</div>`);
-    $('#f').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); S.holdings.push({ id: id(), symbol: f.get('symbol').toUpperCase(), qty: +f.get('qty'), price: +f.get('price'), cost: +f.get('cost') }); save(); VIEWS.holdings(); };
+    const byPlat = {}, byTerm = {};
+    S.holdings.forEach(h => { byPlat[h.platform] = (byPlat[h.platform] || 0) + h.qty * h.price; byTerm[h.term] = (byTerm[h.term] || 0) + h.qty * h.price; });
+    const expAnnual = S.holdings.reduce((x, h) => x + h.qty * h.price * (h.ret || 0) / 100, 0);
+    view(`<div class="grid g3">${[['Portfolio Value', fmt(d.invValue)], ['Expected Income / Year*', fmt(expAnnual)], ['Platforms', Object.keys(byPlat).length + ' · Terms ' + Object.keys(byTerm).length]].map(([l, v]) => `<div class="card goldtop kpi"><div class="label">${l}</div><div class="num" style="font-size:1.25rem">${v}</div></div>`).join('')}</div>
+    <div class="grid g2" style="margin-top:1rem"><div class="card"><h3>By Platform</h3>${Object.entries(byPlat).map(([k, v]) => `<p><b>${esc(k)}</b> — ${fmt(v)} (${d.invValue ? Math.round(v / d.invValue * 100) : 0}%)</p><div class="progress"><i style="width:${d.invValue ? v / d.invValue * 100 : 0}%"></i></div>`).join('')}</div>
+    <div class="card"><h3>By Term (v5: Long 5–20y · Medium 5–10y · Short 1–5y · Monthly)</h3>${Object.entries(byTerm).map(([k, v]) => `<p><b>${esc(k)}</b> — ${fmt(v)} (${d.invValue ? Math.round(v / d.invValue * 100) : 0}%)</p><div class="progress"><i style="width:${d.invValue ? v / d.invValue * 100 : 0}%"></i></div>`).join('')}</div></div>
+    <div class="card" style="margin-top:1rem"><h3>Investments — Ktrade · Meezan · Faysal · Mahana ${tag('MANUAL')}</h3><table><tr><th>Instrument</th><th>Platform</th><th>Term</th><th>Qty</th><th>Price</th><th>Value</th><th>Exp. Return*</th><th>Payouts/yr</th><th>Exp./yr</th><th></th></tr>${S.holdings.map(h => `<tr><td><b>${esc(h.symbol)}</b></td><td>${esc(h.platform)}</td><td>${esc(h.term)}</td><td>${h.qty}</td><td>${fmt(h.price)}</td><td>${fmt(h.qty * h.price)}</td><td>${h.ret}%</td><td>${h.pays}×</td><td>${fmt(h.qty * h.price * h.ret / 100)}</td><td>${delBtn('holdings', h.id)}</td></tr>`).join('')}</table>
+    <p style="color:var(--muted);font-size:.85rem">*Expected return is YOUR estimate per platform plan (e.g. Meezan short/medium/long plans, stock dividends 2–4×/year) — never guaranteed, never “live”. Prices are manual entries until CSV import per platform.</p>
+    ${form('f', inp('symbol', 'Instrument (e.g. OGDC / Meezan Cash Fund)') + `<label>Platform<select name="platform"><option>Ktrade</option><option>Meezan</option><option>Faysal</option><option>Mahana Cash</option><option>Other Fund</option><option>Sukuk</option><option>Gold</option><option>Silver</option></select></label>` + `<label>Term<select name="term"><option>Long-term</option><option>Medium-term</option><option>Short-term</option><option>Monthly-term</option></select></label>` + inp('qty', 'Qty / Units', 'number', 'step="any"') + inp('price', 'Current price', 'number', 'step="any"') + inp('cost', 'Avg cost', 'number', 'step="any"') + inp('ret', 'Expected return % / yr', 'number', 'step="any" value="12"') + inp('pays', 'Payouts per year', 'number', 'value="4"'), 'Add investment')}</div>`);
+    $('#f').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); S.holdings.push({ id: id(), symbol: f.get('symbol'), platform: f.get('platform'), term: f.get('term'), qty: +f.get('qty'), price: +f.get('price'), cost: +f.get('cost'), ret: +f.get('ret') || 0, pays: +f.get('pays') || 0 }); save(); VIEWS.holdings(); };
     bindDel('holdings', VIEWS.holdings);
   },
   market() {
@@ -243,7 +282,7 @@ const VIEWS = {
     bindDel('family', VIEWS.family);
   },
   habits() {
-    view(`<div class="card"><h3>Habits — tap to mark today (feeds Health Score &amp; Decision OS)</h3>${S.habits.map(h => { const done = h.days.includes(today()); const streak = h.days.length; return `<p><button class="btn small ${done ? '' : 'ghost'}" data-habit="${h.id}">${done ? '✅' : '○'} ${esc(h.name)}</button> <span style="color:var(--muted)">${esc(h.target)} · ${streak} day(s) logged</span></p>`; }).join('')}
+    view(`<div class="card"><h3>Habits — tap to mark today (feeds Health Score &amp; AI Assistant)</h3>${S.habits.map(h => { const done = h.days.includes(today()); const streak = h.days.length; return `<p><button class="btn small ${done ? '' : 'ghost'}" data-habit="${h.id}">${done ? '✅' : '○'} ${esc(h.name)}</button> <span style="color:var(--muted)">${esc(h.target)} · ${streak} day(s) logged</span></p>`; }).join('')}
     ${form('f', inp('name', 'Habit name') + inp('target', 'Target (e.g. Daily)'), 'Add habit')}</div>`);
     document.querySelectorAll('[data-habit]').forEach(b => b.onclick = () => { const h = S.habits.find(x => x.id === b.dataset.habit); h.days = h.days.includes(today()) ? h.days.filter(d => d !== today()) : [...h.days, today()]; save(); VIEWS.habits(); });
     $('#f').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); S.habits.push({ id: id(), name: f.get('name'), target: f.get('target'), days: [] }); save(); VIEWS.habits(); };
@@ -267,20 +306,20 @@ const VIEWS = {
   },
   health() {
     view(`<div class="card"><h3>Health log</h3><table><tr><th>Date</th><th>Metric</th><th>Value</th></tr>${S.health.map(h => `<tr><td>${h.date}</td><td>${esc(h.metric)}</td><td>${esc(h.value)}</td></tr>`).join('')}</table>
-    ${form('f', inp('metric', 'Metric (Steps / Sleep (h) / Weight)') + inp('value', 'Value'), 'Log')} <p style="color:var(--muted)">Health feeds the Health Score and Decision OS — a body that cannot pray standing is a financial risk too.</p></div>`);
+    ${form('f', inp('metric', 'Metric (Steps / Sleep (h) / Weight)') + inp('value', 'Value'), 'Log')} <p style="color:var(--muted)">Health feeds the Health Score and AI Assistant — a body that cannot pray standing is a financial risk too.</p></div>`);
     $('#f').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); S.health.unshift({ id: id(), date: today(), metric: f.get('metric'), value: f.get('value') }); save(); VIEWS.health(); };
   },
   legacy() {
     view(`<div class="grid g2"><div class="card goldtop"><h3>🕋 Wasiyyah (Will) Checker</h3><p>Islamic rule: bequests to non-heirs ≤ ⅓ of the estate after debts &amp; funeral costs.</p><div id="was-out"></div>${form('fw', inp('estate', 'Estate value', 'number', 'required') + inp('bequest', 'Planned bequest to non-heirs', 'number', 'required'), 'Check')}</div>
-    <div class="card"><h3>🌳 Legacy &amp; Community roadmap</h3><p>Family Tree · Parent Care Log · Yateem Sponsorship · Marriage/Mahr Goal · Child Education Fund (already in Goals). Community OS and full inheritance (faraid) distribution arrive in v1.7 — faraid shares must be scholar-verified, so this app checks the ⅓ limit only and never issues a fatwa.</p></div></div>`);
+    <div class="card"><h3>🌳 Legacy &amp; Community roadmap</h3><p>Family Tree · Parent Care Log · Yateem Sponsorship · Marriage/Mahr Goal · Child Education Fund (already in Goals). Community platform and full inheritance (faraid) distribution arrive in v1.7 — faraid shares must be scholar-verified, so this app checks the ⅓ limit only and never issues a fatwa.</p></div></div>`);
     $('#fw').onsubmit = e => { e.preventDefault(); const f = new FormData(e.target); const max = +f.get('estate') / 3; $('#was-out').innerHTML = `<p>Max bequest: <b>${fmt(max)}</b> — yours ${fmt(+f.get('bequest'))} is <b>${+f.get('bequest') <= max ? '✅ within the ⅓ limit' : '⚠️ above the ⅓ limit'}</b>.</p>`; };
   },
   assistant() {
     const d = derived();
-    view(`<div class="card"><h3>🤖 Decision OS — grounded in YOUR numbers, cites everything</h3><div id="chat">${chatLog.map(m => `<p><b>${m.who}:</b> ${m.text}</p>`).join('')}</div>
+    view(`<div class="card"><h3>🤖 AI Assistant — grounded in YOUR numbers, cites everything</h3><div id="chat">${chatLog.map(m => `<p><b>${m.who}:</b> ${m.text}</p>`).join('')}</div>
     ${form('f', inp('q', 'Ask: “What should I fix today?” · “Can I afford a car?” · “Zakat?”', 'text', 'required'), 'Ask')}
     <p style="color:var(--muted);font-size:.85rem">Refuses trades &amp; fatwas. Says “I don’t have that data” instead of inventing numbers.</p></div>`);
-    $('#f').onsubmit = e => { e.preventDefault(); const q = new FormData(e.target).get('q'); chatLog.push({ who: 'You', text: esc(q) }, { who: 'Decision OS', text: answer(q, d) }); VIEWS.assistant(); };
+    $('#f').onsubmit = e => { e.preventDefault(); const q = new FormData(e.target).get('q'); chatLog.push({ who: 'You', text: esc(q) }, { who: 'AI Assistant', text: answer(q, d) }); VIEWS.assistant(); };
   },
   reports() {
     const d = derived();
@@ -292,7 +331,7 @@ const VIEWS = {
     $('#restore').onchange = async e => { S = JSON.parse(await e.target.files[0].text()); save(); renderApp(); toast('Backup restored'); };
   },
   settings() {
-    view(`<div class="grid g3">${[['Free', 'PKR 0', 'Dashboard · 2 accounts · Zakat & screener tools · 1 user'], ['Pro', 'PKR 1,499/mo', 'Unlimited accounts · Budgets · Business OS · AI Decision OS · CSV import'], ['Family', 'PKR 2,999/mo', '5 seats · Family OS · Shared goals · Legacy planner']].map(([n, p, f]) => `<div class="card goldtop plan ${S.plan === n ? 'cur' : ''}"><h3>${n}</h3><div class="num serif" style="font-size:1.4rem">${p}</div><p style="color:var(--muted)">${f}</p><button class="btn small" data-plan="${n}">${S.plan === n ? 'Current plan' : 'Choose ' + n}</button></div>`).join('')}</div>
+    view(`<div class="grid g3">${[['Free', 'PKR 0', 'Dashboard · 2 accounts · Zakat & screener tools · 1 user'], ['Pro', 'PKR 1,499/mo', 'Unlimited accounts · Budgets · Business · AI Assistant · CSV import'], ['Family', 'PKR 2,999/mo', '5 seats · Family · Shared goals · Legacy planner']].map(([n, p, f]) => `<div class="card goldtop plan ${S.plan === n ? 'cur' : ''}"><h3>${n}</h3><div class="num serif" style="font-size:1.4rem">${p}</div><p style="color:var(--muted)">${f}</p><button class="btn small" data-plan="${n}">${S.plan === n ? 'Current plan' : 'Choose ' + n}</button></div>`).join('')}</div>
     <div class="card" style="margin-top:1rem"><h3>Workspace (SaaS)</h3><p>Tenant: <b>${esc(session.email)}</b> — your data is isolated to this sign-in on this device. Roles (production Laravel): Owner / Accountant / Viewer (spatie RBAC). Billing: <span class="tag delayed">NOT CONNECTED</span> — no payment provider is wired; plans are informational until you connect Stripe/PayFast.</p>
     <p>Cloud backend: <b>Supabase project <span class="serif">${SUPABASE.projectRef}</span> is LIVE</b> (${SUPABASE.url}) — 15 tables with Row Level Security; auth wiring is the next slice, so this demo still saves in your browser. Vercel project <b>barakah-os</b> is configured (root <i>apps/web</i>, Supabase env vars set) — GitHub connected by founder — Vercel deployment in progress (GitHub Pages remains the primary live URL until Vercel reports READY). Production Laravel platform can point at the same Supabase Postgres.</p>
     <button class="btn danger" id="reset">Reset demo data</button></div>`);
@@ -314,14 +353,14 @@ const TOOLS = [
   { id: 'subs', icon: '✂️', name: 'Subscription Audit', desc: 'Find recurring leaks in your transactions.' },
 ];
 const toolShell = (title, body) => view(`<button class="btn ghost small" id="back">← All tools</button><div class="card goldtop" style="margin-top:.7rem"><h3>${title}</h3>${body}<div id="tool-out" style="margin-top:1rem"></div></div>`) || ($('#back').onclick = () => { activeTool = null; VIEWS.tools(); });
-let chatLog = [{ who: 'Decision OS', text: 'Assalamu alaikum. Ask me “What should I fix today?” — I only use your real entries and cite them.' }];
+let chatLog = [{ who: 'AI Assistant', text: 'Assalamu alaikum. Ask me “What should I fix today?” — I only use your real entries and cite them.' }];
 function answer(q, d) {
   const s = q.toLowerCase();
   if (/buy|sell|trade|fatwa|halal or haram/.test(s) && /stock|share|trade|buy|sell/.test(s)) return 'I can’t execute or recommend trades, and I never issue fatwas. I can screen a stock with the Halal Screener and show its ratios for your scholar to judge.';
   if (/fix today|today/.test(s)) return `Today: habits at ${d.habitPct}% (${S.habits.filter(h => h.days.includes(today())).length}/${S.habits.length} done), ${d.overdue.length} overdue task(s)${d.overdue.length ? ' — first: “' + esc(d.overdue[0].title) + '”' : ''}, net cash flow ${fmt(d.net)} (savings rate ${d.savingsRate}%). Biggest lever: ${d.overdue.length ? 'clear the overdue task' : d.savingsRate < 15 ? 'raise savings rate toward 15%+' : 'route surplus to your top goal'}. [Sources: Habits, Tasks, Transactions — ${'MANUAL'}]`;
   if (/zakat/.test(s)) return `Zakat estimate: assets ${fmt(d.zakat.assets)}, nisab ${fmt(d.zakat.nisab)}, due <b>${fmt(d.zakat.due)}</b> ${d.zakat.eligible ? '(eligible)' : '(below nisab)'}. [Source: Accounts + Holdings — MANUAL] Confirm with a scholar for your madhab.`;
   if (/afford|car|buy/.test(s)) return `With net cash flow ${fmt(d.net)}/period and net worth ${fmt(d.netWorth)}: a purchase is comfortable if its monthly cost stays under ~30% of net (${fmt(d.net * 0.3)}). Tell me the price and I’ll run the Goal Planner. [Source: Transactions — MANUAL]`;
-  if (/debt|loan/.test(s)) return 'Open Tools → Debt Payoff Planner. Interest is never “profit” in Barakah OS; the planner only helps you exit existing debt faster.';
+  if (/debt|loan/.test(s)) return 'Open Tools → Debt Payoff Planner. Interest is never “profit” in Barakah; the planner only helps you exit existing debt faster.';
   return 'I don’t have that data in your workspace yet — add it (accounts, transactions, habits or tasks) and ask again. I won’t invent numbers.';
 }
 const TOOL_VIEWS = {
