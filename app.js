@@ -27,12 +27,31 @@ const SEED_EXPENSES = [
   { id: "seed-9", date: "2026-01-25", merchant: "Local market", category: "food", amount: 440 }
 ];
 
+const BUDGET = 3200;
+const STORAGE_KEY = "barakah-expenses";
+
 const today = () => new Date().toISOString().slice(0, 10);
 const categoryFor = (id) => CATEGORIES.find((category) => category.id === id) || CATEGORIES[0];
+
+function loadExpenses() {
+  try {
+    const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY));
+    if (!Array.isArray(parsed)) return SEED_EXPENSES;
+    const valid = parsed.filter((e) => e && typeof e.merchant === "string" && Number.isFinite(Number(e.amount)));
+    return valid.map((e) => ({
+      id: String(e.id || crypto.randomUUID()),
+      date: typeof e.date === "string" ? e.date : today(),
+      merchant: e.merchant,
+      category: categoryFor(e.category).id,
+      amount: Number(e.amount)
+    }));
+  } catch { return SEED_EXPENSES; }
+}
 const formatDate = (date) => new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric" }).format(new Date(`${date}T12:00:00`));
 
 function GlassCard({ children, className = "" }) { return <section className={`glass-card ${className}`}>{children}</section>; }
 function Btn({ children, className = "", ...props }) { return <button className={`btn ${className}`} {...props}>{children}</button>; }
+function Badge({ children, tone = "muted" }) { return <span className={`badge badge-${tone}`}>{children}</span>; }
 
 function StatCard({ label, value, note, noteClass = "" }) {
   return <GlassCard className="stat-card"><div className="stat-label">{label}</div><div className="stat-value">{value}</div><div className={`stat-note ${noteClass}`}>{note}</div></GlassCard>;
@@ -54,6 +73,11 @@ function Transactions({ expenses }) {
 
 function AddExpense({ onClose, onAdd }) {
   const [form, setForm] = useState({ merchant: "", amount: "", category: "food" });
+  useEffect(() => {
+    const onKey = (event) => { if (event.key === "Escape") onClose(); };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [onClose]);
   const update = (key) => (event) => setForm({ ...form, [key]: event.target.value });
   const submit = (event) => {
     event.preventDefault();
@@ -78,12 +102,9 @@ function Placeholder({ title, version }) {
 }
 
 function App() {
-  const [expenses, setExpenses] = useState(() => {
-    try { return JSON.parse(localStorage.getItem("barakah-expenses")) || SEED_EXPENSES; }
-    catch { return SEED_EXPENSES; }
-  });
+  const [expenses, setExpenses] = useState(loadExpenses);
   const [modalOpen, setModalOpen] = useState(false);
-  useEffect(() => localStorage.setItem("barakah-expenses", JSON.stringify(expenses)), [expenses]);
+  useEffect(() => { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(expenses)); } catch {} }, [expenses]);
   const spent = useMemo(() => expenses.reduce((sum, expense) => sum + expense.amount, 0), [expenses]);
   const sadaqah = useMemo(() => expenses.filter((expense) => expense.category === "sadaqah").reduce((sum, expense) => sum + expense.amount, 0), [expenses]);
   const month = new Intl.DateTimeFormat("en-US", { month: "long", year: "numeric" }).format(new Date());
@@ -96,12 +117,12 @@ function App() {
   return <main className="app-shell">
     <header className="topbar"><div><p className="eyebrow">Assalamu alaikum</p><h1>Your wealth, in balance.</h1><p className="subtitle">{month} · Full overview</p></div><div className="actions"><Btn className="btn-ghost" onClick={exportData}>Export</Btn><Btn className="btn-gold" onClick={() => setModalOpen(true)}>+ Add expense</Btn></div></header>
     <section className="stats-grid">
-      <StatCard label="Spent this month" value={money(spent)} note={`${money(3200 - spent)} left of ${money(3200)}`} noteClass={spent > 3200 ? "negative" : ""} />
+      <StatCard label="Spent this month" value={money(spent)} note={spent > BUDGET ? `${money(spent - BUDGET)} over ${money(BUDGET)}` : `${money(BUDGET - spent)} left of ${money(BUDGET)}`} noteClass={spent > BUDGET ? "negative" : ""} />
       <StatCard label="Income this month" value={money(0)} note="Net cash: $0" />
       <StatCard label="Portfolio value" value={money(0)} note="$0 invested" />
       <StatCard label="Sadaqah given" value={money(sadaqah)} note="A quiet act of generosity" noteClass="positive" />
     </section>
-    <section className="content-grid"><Transactions expenses={expenses} /><Placeholder title="Monthly spend" version="v1.1" /><Placeholder title="Investments" version="v1.2" /><Placeholder title="Zakat & Sadaqah" version="v1.4" /></section>
+    <section className="content-grid"><Transactions expenses={expenses} /><Placeholder title="Monthly spend & Where it went" version="v1.1" /><Placeholder title="Investments" version="v1.2" /><Placeholder title="Cash flow" version="v1.3" /><Placeholder title="Zakat" version="v1.4" /><Placeholder title="Shariah screener & Pakistan Islamic banks" version="v1.5" /><Placeholder title="CSV tools" version="v1.6" /></section>
     {modalOpen && <AddExpense onClose={() => setModalOpen(false)} onAdd={addExpense} />}
   </main>;
 }

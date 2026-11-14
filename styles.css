@@ -72,5 +72,14 @@ h2 { font-size: 28px; margin: 0; font-weight: 600; }
 .field input, .field select { width: 100%; border: 1px solid rgba(140,134,118,.25); border-radius: 11px; padding: 11px 12px; color: var(--ink); background: rgba(255,255,255,.48); outline: none; }
 .field input:focus, .field select:focus { border-color: rgba(201,162,39,.7); box-shadow: 0 0 0 3px rgba(201,162,39,.12); }
 .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 5px; }
+.badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 4px 9px; font-size: 11px; font-weight: 600; border: 1px solid rgba(140,134,118,.22); color: var(--ink-soft); background: rgba(255,255,255,.5); }
+.badge-gold { color: #6d5510; border-color: rgba(201,162,39,.35); background: rgba(229,199,102,.22); }
+.badge-green { color: var(--green); border-color: rgba(47,122,94,.28); background: rgba(47,122,94,.1); }
+.badge-red { color: var(--red); border-color: rgba(180,84,63,.28); background: rgba(180,84,63,.09); }
+.btn:focus-visible, input:focus-visible, select:focus-visible { outline: 2px solid rgba(201,162,39,.65); outline-offset: 2px; }
+.glass-card { transition: transform .18s ease, box-shadow .18s ease; }
+.modal-backdrop { animation: fade-in .18s ease; }
+@keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation: none !important; transition: none !important; } }
 @media (max-width: 1024px) { .stats-grid { grid-template-columns: repeat(2, 1fr); } .content-grid { grid-template-columns: 1fr; } }
 @media (max-width: 640px) { .app-shell { padding: 28px 14px 40px; } .topbar { align-items: flex-start; flex-direction: column; margin-bottom: 22px; } .actions { width: 100%; } .actions .btn { flex: 1; } .stats-grid { grid-template-columns: 1fr; gap: 12px; } .stat-card { min-height: 140px; } .panel { padding: 19px; } h1 { font-size: 48px; } }
