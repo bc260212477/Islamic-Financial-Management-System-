@@ -44,9 +44,13 @@ jobs:
       - run: npm ci && npm run build
       - run: cp .env.example .env && php artisan key:generate
       - name: Migrations run on PostgreSQL
-        run: php artisan migrate:fresh --seed --force
+        run: php artisan migrate:fresh --seed --force 2>&1 | tee migrate.log; exit ${PIPESTATUS[0]}
       - name: PHPUnit (PostgreSQL)
         run: php artisan test --log-junit junit.xml 2>&1 | tee phpunit.log; exit ${PIPESTATUS[0]}
+      - name: Upload migrate log
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with: { name: migrate-log, path: 'apps/platform/migrate.log' }
       - name: Upload test diagnostics
         if: failure()
         uses: actions/upload-artifact@v4
