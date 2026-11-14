@@ -120,7 +120,7 @@ let route = 'dashboard', activeTool = null;
 function renderAuth() {
   $('#app-view').hidden = true; $('#auth-view').hidden = false;
   $('#auth-view').innerHTML = `<div class="authwrap"><div class="card goldtop authcard">
-    <div class="serif" style="font-size:2rem;color:var(--green)">Barakah</div>
+    <div class="serif" style="font-size:2.15rem;color:var(--green)"><span class="mark">ب</span>Barakah</div>
     <p style="color:var(--muted)">Live deliberately. Grow barakah. — Money, business, family, habits, learning, health &amp; Islamic finance in one SaaS.</p>
     <div class="banner"><b>Demo workspace.</b> Browser-local data; demo figures are FICTIONAL ${tag('DEMO')} Production sign-in is the Laravel platform.</div>
     <form id="login-form"><label>Email<input name="email" type="email" required value="demo@barakah.local"></label>
@@ -137,7 +137,7 @@ function renderAuth() {
 
 function renderApp() {
   $('#auth-view').hidden = true; $('#app-view').hidden = false;
-  $('#sidebar').innerHTML = `<div class="brand">Barakah<br><span style="font-size:.72rem;color:#9FBFA8">Live deliberately. Grow barakah.</span></div>` +
+  $('#sidebar').innerHTML = `<div class="brand"><span class="mark">ب</span>Barakah<small>Live deliberately. Grow barakah.<br>Every rupee, accounted with ihsan.</small></div>` +
     NAV.map(([g, items]) => `<h4>${g}</h4><nav>${items.map(([r, l]) => `<button data-route="${r}" class="${route === r ? 'active' : ''}"><span>${l.split(' ')[0]}</span><span class="lbl">${l.slice(l.indexOf(' ') + 1)}</span></button>`).join('')}</nav>`).join('') +
     `<div style="margin-top:1rem" class="lbl"><button class="btn gold small" id="logout">Sign out (${esc(session.name)})</button></div>`;
   document.querySelectorAll('[data-route]').forEach(b => b.onclick = () => { route = b.dataset.route; activeTool = null; renderApp(); });
@@ -167,7 +167,7 @@ function kpiCircle(label, pct, sub) { const v = Math.max(0, Math.min(100, Math.r
 const VIEWS = {
   dashboard() {
     const d = derived();
-    view(`<div class="grid g4">
+    view(`<div class="hero"><h2>Assalamu alaikum, ${esc(session.name)} 🌙</h2><p>Here is your money story: you earned <b class="num">${fmt(d.income)}</b>, spent <b class="num">${fmt(d.expense)}</b> and kept <b class="num">${fmt(d.net)}</b> — a savings rate of <b class="num">${d.savingsRate}%</b>. Investments across your platforms are worth <b class="num">${fmt(d.invValue)}</b>${d.overdue.length ? `, and <b>${d.overdue.length} task(s)</b> need your attention today` : ''}. Zakat is estimated at <b class="num">${fmt(d.zakat.due)}</b>.</p><button class="btn gold" onclick="document.querySelector('[data-route=transactions]').click()">+ Add income / expense</button> <button class="btn ghost" onclick="document.querySelector('[data-route=allocation]').click()">％ See my salary split</button> <button class="btn ghost" onclick="document.querySelector('[data-route=holdings]').click()">📈 My investments</button></div><div class="grid g4">
       ${[['Net Worth', fmt(d.netWorth)], ['Cash Flow (period)', fmt(d.net)], ['Savings Rate', d.savingsRate + '%'], ['Business Profit', fmt(d.bizProfit)]].map(([l, v]) => `<div class="card goldtop kpi"><div class="label">${l}</div><div class="num">${v}</div></div>`).join('')}
       </div><div class="grid g2" style="margin-top:1rem">
       <div class="card"><h3>Cash flow ${tag('MANUAL')}</h3>${barChart([{ l: 'Income', v: d.income, c: '#1B7A43' }, { l: 'Expenses', v: d.expense, c: '#C6A34F' }, { l: 'Net', v: Math.max(d.net, 0), c: '#14532D' }])}
