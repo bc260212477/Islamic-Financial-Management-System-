@@ -30,6 +30,7 @@ Islamic-Financial-Management-System-/
 │       ├── SECURITY.md              # Auth, encryption, privacy, retention
 │       ├── CONTRIBUTING.md          # Branch/PR/test conventions
 │       └── TESTING.md               # Formula/ingestion/API/E2E test plans
+├── docs/screenshots/              # Real CI-captured screenshots (embedded in README)
 ├── docs/04-life-os/DAILY-BREAKDOWN.md  # Life OS D.A.I.L.Y. slices
 ├── skills/                          # Reusable Arena skills (one folder per skill)
 │   ├── financial-calculations/SKILL.md
@@ -45,6 +46,7 @@ Islamic-Financial-Management-System-/
 │       ├── index.html
 │       ├── styles.css
 │       └── app.js
+├── tools/screenshots/             # Playwright capture script (CI)
 └── .github/
     └── workflows/
         └── deploy-pages.yml         # Deploys apps/static-v1 on push to main

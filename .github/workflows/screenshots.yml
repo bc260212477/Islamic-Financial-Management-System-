@@ -1,0 +1,64 @@
+name: Screenshots (docs)
+
+# Captures REAL screenshots of the static demo and the Laravel platform
+# (seeded FICTIONAL demo account) and commits them to docs/screenshots/ on
+# the branch it runs on. README embeds these; refresh after UI changes.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['arena/25358bad-islamic-financial-management-s']
+    paths: ['.github/workflows/screenshots.yml', 'tools/screenshots/**']
+
+permissions:
+  contents: write
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: pdo_sqlite, sqlite3, bcmath, intl, mbstring, xml, curl, zip
+          tools: composer:v2
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+
+      - name: Boot Laravel platform (SQLite, seeded demo)
+        working-directory: apps/platform
+        run: |
+          composer install --no-interaction --prefer-dist
+          npm ci && npm run build
+          cp .env.example .env
+          sed -i 's/^DB_CONNECTION=.*/DB_CONNECTION=sqlite/' .env
+          grep -v '^DB_HOST=\|^DB_PORT=\|^DB_DATABASE=\|^DB_USERNAME=\|^DB_PASSWORD=' .env > .env.tmp && mv .env.tmp .env
+          php artisan key:generate
+          touch database/database.sqlite
+          php artisan migrate:fresh --seed --force
+          (php artisan serve --port=8000 > /tmp/laravel.log 2>&1 &)
+          for i in $(seq 1 30); do curl -sf http://127.0.0.1:8000/login && break || sleep 1; done
+
+      - name: Serve static demo
+        run: |
+          (python3 -m http.server 4173 --directory apps/static-v1 > /tmp/static.log 2>&1 &)
+          for i in $(seq 1 15); do curl -sf http://127.0.0.1:4173/ && break || sleep 1; done
+
+      - name: Install Playwright Chromium
+        working-directory: tools/screenshots
+        run: |
+          npm install
+          npx playwright install --with-deps chromium
+
+      - name: Capture screenshots
+        working-directory: tools/screenshots
+        run: node capture.mjs
+
+      - name: Commit screenshots back to this branch
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/screenshots
+          git diff --cached --quiet && echo "no screenshot changes" || git commit -m "docs: refresh app screenshots (CI) [skip ci]"
+          git push origin "HEAD:${GITHUB_REF_NAME}" || true
