@@ -1,4 +1,4 @@
-name: Deploy Barakah Finance
+name: Deploy Financial Management System
 
 on:
   push:
