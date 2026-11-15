@@ -1,4 +1,4 @@
-// Barakah — pure finance formulas (shared by the web SaaS and its node tests).
+// Financial Management System — pure finance formulas (shared by the web SaaS and its node tests).
 // Money is handled as plain numbers here for display; the Laravel platform
 // stores DECIMAL(19,4). Never float-guess in the platform — see FINANCIAL-RULES.md.
 export const NISAB_GOLD_GRAMS = 85;
