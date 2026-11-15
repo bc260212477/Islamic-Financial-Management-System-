@@ -1,4 +1,4 @@
-# Barakah Finance
+# Financial Management System
 
 Personal Islamic finance dashboard, currently implemented through **v1.0**.
 
@@ -8,7 +8,7 @@ All documents live in **[docs/](docs/)** — see the full map in **[docs/PROJECT
 
 ## Platform planning (Arena build contract)
 
-The full technical plan for evolving Barakah into the Complete Financial Intelligence Platform is in **[docs/01-architecture/TECHNICAL-PLAN.md](docs/01-architecture/TECHNICAL-PLAN.md)**, with binding companions: [PROJECT](docs/00-project/PROJECT.md) · [PRD](docs/00-project/PRD.md) · [ARCHITECTURE](docs/01-architecture/ARCHITECTURE.md) · [DATABASE](docs/01-architecture/DATABASE.md) · [FINANCIAL-RULES](docs/02-finance/FINANCIAL-RULES.md) · [ISLAMIC-FINANCE](docs/02-finance/ISLAMIC-FINANCE.md) · [DATA-SOURCES](docs/02-finance/DATA-SOURCES.md) · [SOUL](docs/03-governance/SOUL.md) · [AGENTS](docs/03-governance/AGENTS.md) · [ROADMAP](docs/03-governance/ROADMAP.md) · [DECISIONS](docs/03-governance/DECISIONS.md) · [SECURITY](docs/03-governance/SECURITY.md) · [TESTING](docs/03-governance/TESTING.md) · [skills/](skills/) · [UI-DESIGN](docs/01-architecture/UI-DESIGN.md) · [STACK-AUDIT](docs/01-architecture/STACK-AUDIT.md) · [CONTRIBUTING](docs/03-governance/CONTRIBUTING.md)
+The full technical plan for evolving Financial Management System into the Complete Financial Intelligence Platform is in **[docs/01-architecture/TECHNICAL-PLAN.md](docs/01-architecture/TECHNICAL-PLAN.md)**, with binding companions: [PROJECT](docs/00-project/PROJECT.md) · [PRD](docs/00-project/PRD.md) · [ARCHITECTURE](docs/01-architecture/ARCHITECTURE.md) · [DATABASE](docs/01-architecture/DATABASE.md) · [FINANCIAL-RULES](docs/02-finance/FINANCIAL-RULES.md) · [ISLAMIC-FINANCE](docs/02-finance/ISLAMIC-FINANCE.md) · [DATA-SOURCES](docs/02-finance/DATA-SOURCES.md) · [SOUL](docs/03-governance/SOUL.md) · [AGENTS](docs/03-governance/AGENTS.md) · [ROADMAP](docs/03-governance/ROADMAP.md) · [DECISIONS](docs/03-governance/DECISIONS.md) · [SECURITY](docs/03-governance/SECURITY.md) · [TESTING](docs/03-governance/TESTING.md) · [skills/](skills/) · [UI-DESIGN](docs/01-architecture/UI-DESIGN.md) · [STACK-AUDIT](docs/01-architecture/STACK-AUDIT.md) · [CONTRIBUTING](docs/03-governance/CONTRIBUTING.md)
 
 Build order is **[docs/03-governance/ROADMAP.md](docs/03-governance/ROADMAP.md)** — one phase at a time, owner-tested. Current status: **static roadmap complete (v1.0–v2.0) + Laravel platform Phases 2–15 + Life OS (Family/Habits/Tasks/Growth/Elite Path) built and CI-verified** — investments, cash flow, zakat, Shariah screener, Islamic banks, CSV import/export, backup/restore, search/filter/delete, budget edit, PKR/USD display toggle, dark mode, print view, PWA manifest. Platform stack is now **Laravel 13 + PostgreSQL** (D-012, STACK-AUDIT); build follows the 16-phase prompts in ROADMAP (Phases 0–1 done). PHP runs via GitHub Actions/owner machine — no PHP in the Arena sandbox (D-014).
 
@@ -45,7 +45,7 @@ php artisan migrate --seed
 php artisan serve
 ```
 
-Demo login (FICTIONAL seeded data): `demo@barakah.local` / `password`
+Demo login (FICTIONAL seeded data): `demo@financial.local` / `password`
 
 ## Why do I see the word "Illuminate"?
 
@@ -62,7 +62,7 @@ flip one setting, once:
 
 1. Open <https://github.com/bc260212477/Islamic-Financial-Management-System-/settings/pages>
 2. Under **Build and deployment → Source**, choose **GitHub Actions**.
-3. Then run/approve the **Deploy Barakah Finance** workflow (Actions tab), or
+3. Then run/approve the **Deploy** workflow (Actions tab), or
    push to `main` — the workflow at `.github/workflows/deploy-pages.yml` deploys it.
 
 Future pushes to `main` will redeploy the site automatically.
@@ -90,5 +90,5 @@ Then open <http://127.0.0.1:4173/>.
 
 **Do not start v1.1 until this checklist passes.** Report any defects as a clear list.
 ## 🌐 Web SaaS (apps/web) — the clickable product
-Full Barakah OS in the browser: login/demo workspace, Dashboard, Accounts, Transactions, Budgets, Goals, Cash Flow, Businesses, Holdings, PSX screener (DEMO-labelled), **Tools Hub** (Zakat, Halal Screener, Purification, Riba Detector, Debt Payoff, Goal Planner, Inflation, PK Tax, Subscription Audit), Islamic Finance, Family, Habits, Tasks, Growth, Health, Legacy, AI Decision OS, Reports, Plans/Settings. Demo login: `demo@barakah.local` / `password` (FICTIONAL data, browser-local). Run: `python3 -m http.server 8080 --directory apps/web`. Details: docs/00-project/WEB-SAAS.md. Production backend remains the Laravel platform below.
+Full Financial Management System in the browser: login/demo workspace, Dashboard, Accounts, Transactions, Budgets, Goals, Cash Flow, Businesses, Holdings, PSX screener (DEMO-labelled), **Tools Hub** (Zakat, Halal Screener, Purification, Riba Detector, Debt Payoff, Goal Planner, Inflation, PK Tax, Subscription Audit), Islamic Finance, Family, Habits, Tasks, Growth, Health, Legacy, AI Decision OS, Reports, Plans/Settings. Demo login: `demo@financial.local` / `password` (FICTIONAL data, browser-local). Run: `python3 -m http.server 8080 --directory apps/web`. Details: docs/00-project/WEB-SAAS.md. Production backend remains the Laravel platform below.
 
